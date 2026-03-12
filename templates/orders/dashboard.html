@@ -1,164 +1,234 @@
-{% extends 'orders/base.html' %}
-{% block title %}Dashboard – Cakery{% endblock %}
-{% block topbar_title %}🏠 Dashboard{% endblock %}
-
-{% block content %}
+{% extends 'orders/base.html' %} {% block title %}Dashboard – Cakery{% endblock
+%} {% block topbar_title %}🏠 Dashboard{% endblock %} {% block content %}
 <div class="page-header">
-    <div>
-        <div class="page-header-title"><span>🎂</span> Good day, {{ request.user.username }}!</div>
-        <p style="color:var(--text-light); font-size:0.88rem; margin-top:4px;">Here's what's happening at the bakery today.</p>
+  <div>
+    <div class="page-header-title">
+      <span>🎂</span> Good day, {{ request.user.username }}!
     </div>
-    <a href="{% url 'order_add' %}" class="btn btn-primary">➕ New Order</a>
+    <p style="color: var(--text-light); font-size: 0.88rem; margin-top: 4px">
+      Here's what's happening at the bakery today.
+    </p>
+  </div>
+  <a href="{% url 'order_add' %}" class="btn btn-primary">➕ New Order</a>
 </div>
 
 <!-- Stats Grid -->
 <div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon">📋</div>
-        <div class="stat-num">{{ stats.total_orders }}</div>
-        <div class="stat-label">Total Orders</div>
+  <div class="stat-card">
+    <div class="stat-icon">📋</div>
+    <div class="stat-num">{{ stats.total_orders }}</div>
+    <div class="stat-label">Total Orders</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">⏳</div>
+    <div class="stat-num">{{ stats.pending_orders }}</div>
+    <div class="stat-label">Pending</div>
+  </div>
+  <div class="stat-card gold">
+    <div class="stat-icon">🍳</div>
+    <div class="stat-num">{{ stats.in_production }}</div>
+    <div class="stat-label">In Production</div>
+  </div>
+  <div class="stat-card green">
+    <div class="stat-icon">✅</div>
+    <div class="stat-num">{{ stats.ready_orders }}</div>
+    <div class="stat-label">Ready Pickup</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📅</div>
+    <div class="stat-num">{{ stats.today_pickups }}</div>
+    <div class="stat-label">Today's Pickups</div>
+  </div>
+  <div class="stat-card brown">
+    <div class="stat-icon">📆</div>
+    <div class="stat-num">{{ stats.week_pickups }}</div>
+    <div class="stat-label">This Week</div>
+  </div>
+  <div class="stat-card gold">
+    <div class="stat-icon">💰</div>
+    <div class="stat-num" style="font-size: 1.4rem">
+      ₱{{ stats.total_revenue|floatformat:0 }}
     </div>
-    <div class="stat-card">
-        <div class="stat-icon">⏳</div>
-        <div class="stat-num">{{ stats.pending_orders }}</div>
-        <div class="stat-label">Pending</div>
-    </div>
-    <div class="stat-card gold">
-        <div class="stat-icon">🍳</div>
-        <div class="stat-num">{{ stats.in_production }}</div>
-        <div class="stat-label">In Production</div>
-    </div>
-    <div class="stat-card green">
-        <div class="stat-icon">✅</div>
-        <div class="stat-num">{{ stats.ready_orders }}</div>
-        <div class="stat-label">Ready Pickup</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-num">{{ stats.today_pickups }}</div>
-        <div class="stat-label">Today's Pickups</div>
-    </div>
-    <div class="stat-card brown">
-        <div class="stat-icon">📆</div>
-        <div class="stat-num">{{ stats.week_pickups }}</div>
-        <div class="stat-label">This Week</div>
-    </div>
-    <div class="stat-card gold">
-        <div class="stat-icon">💰</div>
-        <div class="stat-num" style="font-size:1.4rem;">₱{{ stats.total_revenue|floatformat:0 }}</div>
-        <div class="stat-label">Revenue</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div class="stat-num">{{ stats.total_customers }}</div>
-        <div class="stat-label">Customers</div>
-    </div>
+    <div class="stat-label">Revenue</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">👥</div>
+    <div class="stat-num">{{ stats.total_customers }}</div>
+    <div class="stat-label">Customers</div>
+  </div>
 </div>
 
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
-    <!-- Recent Orders -->
-    <div class="card">
-        <div class="card-header">
-            <span class="card-title">📋 Recent Orders</span>
-            <a href="{% url 'order_list' %}" class="btn btn-outline btn-sm">View All</a>
-        </div>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Customer</th>
-                        <th>Pickup</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in recent_orders %}
-                    <tr>
-                        <td><a href="{% url 'order_detail' order.pk %}" style="color:var(--rose); font-weight:700;">#{{ order.orderID }}</a></td>
-                        <td>{{ order.customerID.name }}</td>
-                        <td style="font-size:0.82rem;">{{ order.pickupdate }}</td>
-                        <td><span class="badge badge-{{ order.orderstatus }}">{{ order.get_orderstatus_display }}</span></td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="4" style="text-align:center; color:var(--text-light); padding:20px;">No orders yet</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<div
+  style="
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  "
+>
+  <!-- Recent Orders -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📋 Recent Orders</span>
+      <a href="{% url 'order_list' %}" class="btn btn-outline btn-sm"
+        >View All</a
+      >
     </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>Pickup</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in recent_orders %}
+          <tr>
+            <td>
+              <a
+                href="{% url 'order_detail' order.pk %}"
+                style="color: var(--rose); font-weight: 700"
+                >#{{ order.orderID }}</a
+              >
+            </td>
+            <td>{{ order.customerID.name }}</td>
+            <td style="font-size: 0.82rem">{{ order.pickupdate }}</td>
+            <td>
+              <span class="badge badge-{{ order.orderstatus }}"
+                >{{ order.get_orderstatus_display }}</span
+              >
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td
+              colspan="4"
+              style="
+                text-align: center;
+                color: var(--text-light);
+                padding: 20px;
+              "
+            >
+              No orders yet
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <!-- Upcoming Pickups -->
-    <div class="card">
-        <div class="card-header">
-            <span class="card-title">📅 Upcoming Pickups</span>
-            <span style="font-size:0.78rem; color:var(--text-light);">Next 7 days</span>
-        </div>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Customer</th>
-                        <th>Pickup Date</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in upcoming_pickups %}
-                    <tr>
-                        <td><a href="{% url 'order_detail' order.pk %}" style="color:var(--rose); font-weight:700;">#{{ order.orderID }}</a></td>
-                        <td>{{ order.customerID.name }}</td>
-                        <td style="color:{% if order.pickupdate == today %}var(--rose){% else %}var(--text){% endif %}; font-weight:{% if order.pickupdate == today %}700{% else %}400{% endif %};">
-                            {{ order.pickupdate }}{% if order.pickupdate == today %} 🔴{% endif %}
-                        </td>
-                        <td>₱{{ order.totalprice }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="4" style="text-align:center; color:var(--text-light); padding:20px;">No upcoming pickups</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  <!-- Upcoming Pickups -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📅 Upcoming Pickups</span>
+      <span style="font-size: 0.78rem; color: var(--text-light)"
+        >Next 7 days</span
+      >
     </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>Pickup Date</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in upcoming_pickups %}
+          <tr>
+            <td>
+              <a
+                href="{% url 'order_detail' order.pk %}"
+                style="color: var(--rose); font-weight: 700"
+                >#{{ order.orderID }}</a
+              >
+            </td>
+            <td>{{ order.customerID.name }}</td>
+            <td
+              style="color:{% if order.pickupdate == today %}var(--rose){% else %}var(--text){% endif %}; font-weight:{% if order.pickupdate == today %}700{% else %}400{% endif %};"
+            >
+              {{ order.pickupdate }}{% if order.pickupdate == today %} 🔴{%
+              endif %}
+            </td>
+            <td>₱{{ order.totalprice }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td
+              colspan="4"
+              style="
+                text-align: center;
+                color: var(--text-light);
+                padding: 20px;
+              "
+            >
+              No upcoming pickups
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- Today's Production Tasks -->
 <div class="card">
-    <div class="card-header">
-        <span class="card-title">🍳 Today's Production Tasks</span>
-        <div style="display:flex; gap:10px;">
-            <span style="font-size:0.82rem; color:var(--text-light);">{{ stats.active_tasks }} active</span>
-            <a href="{% url 'production_list' %}" class="btn btn-outline btn-sm">Full Schedule</a>
-        </div>
+  <div class="card-header">
+    <span class="card-title">🍳 Today's Production Tasks</span>
+    <div style="display: flex; gap: 10px">
+      <span style="font-size: 0.82rem; color: var(--text-light)"
+        >{{ stats.active_tasks }} active</span
+      >
+      <a href="{% url 'production_list' %}" class="btn btn-outline btn-sm"
+        >Full Schedule</a
+      >
     </div>
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Task</th>
-                    <th>Cake</th>
-                    <th>Assigned To</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for task in today_tasks %}
-                <tr>
-                    <td style="font-size:0.82rem;">{{ task.starttime }} – {{ task.endtime }}</td>
-                    <td>{{ task.get_task_type_display }}</td>
-                    <td>{{ task.orderitemID.cakeID }}</td>
-                    <td>{{ task.staffID.name|default:"Unassigned" }}</td>
-                    <td><span class="badge badge-{{ task.status }}">{{ task.get_status_display }}</span></td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="5" style="text-align:center; color:var(--text-light); padding:24px;">
-                    🎉 No production tasks scheduled for today
-                </td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Task</th>
+          <th>Cake</th>
+          <th>Assigned To</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in today_tasks %}
+        <tr>
+          <td style="font-size: 0.82rem">
+            {{ task.starttime }} – {{ task.endtime }}
+          </td>
+          <td>{{ task.get_task_type_display }}</td>
+          <td>{{ task.orderitemID.cakeID }}</td>
+          <td>{{ task.staffID.name|default:"Unassigned" }}</td>
+          <td>
+            <span class="badge badge-{{ task.status }}"
+              >{{ task.get_status_display }}</span
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td
+            colspan="5"
+            style="text-align: center; color: var(--text-light); padding: 24px"
+          >
+            🎉 No production tasks scheduled for today
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
