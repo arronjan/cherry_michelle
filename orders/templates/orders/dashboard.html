@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — Cherry Michelle's Cakery{% endblock %}
+{% block page_title %}🏠 Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="stats-grid">
+    <div class="stat-card pink">
+        <div class="stat-icon">🎂</div>
+        <div class="stat-value">{{ total_orders }}</div>
+        <div class="stat-label">Total Orders</div>
+    </div>
+    <div class="stat-card gold">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-value">{{ pending_orders }}</div>
+        <div class="stat-label">Active Orders</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon">🛍️</div>
+        <div class="stat-value">{{ today_pickups }}</div>
+        <div class="stat-label">Pickups Today</div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value">₱{{ total_revenue|floatformat:0 }}</div>
+        <div class="stat-label">Total Revenue</div>
+    </div>
+</div>
+
+<div class="grid-2" style="margin-bottom:24px;">
+    <!-- Recent Orders -->
+    <div class="card">
+        <div class="card-title">📋 Recent Orders</div>
+        {% if recent_orders %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer</th>
+                        <th>Pickup</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td><a href="{% url 'order_detail' order.orderID %}" style="color:#E8509A;font-weight:600;">#{{ order.orderID }}</a></td>
+                        <td>{{ order.customerID.name }}</td>
+                        <td style="font-size:12px;color:#6B7280;">{{ order.pickupdate|date:"M d, Y" }}</td>
+                        <td><span class="badge badge-{{ order.orderstatus }}">{{ order.get_orderstatus_display }}</span></td>
+                        <td style="font-weight:600;color:#22C55E;">₱{{ order.totalprice }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:14px;">
+            <a href="{% url 'order_list' %}" class="btn btn-outline btn-sm">View All Orders →</a>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🎂</div>
+            <p>No orders yet. They'll appear here when customers start ordering!</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Upcoming Pickups -->
+    <div class="card">
+        <div class="card-title">🛍️ Upcoming Pickups (7 days)</div>
+        {% if upcoming_pickups %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer</th>
+                        <th>Pickup Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in upcoming_pickups %}
+                    <tr>
+                        <td><a href="{% url 'order_detail' order.orderID %}" style="color:#E8509A;font-weight:600;">#{{ order.orderID }}</a></td>
+                        <td>{{ order.customerID.name }}</td>
+                        <td>
+                            {% if order.pickupdate == today %}
+                                <strong style="color:#E8509A;">TODAY</strong>
+                            {% else %}
+                                {{ order.pickupdate|date:"M d" }}
+                            {% endif %}
+                        </td>
+                        <td><span class="badge badge-{{ order.orderstatus }}">{{ order.get_orderstatus_display }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <p>No upcoming pickups in the next 7 days.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Today's Production Tasks -->
+<div class="card">
+    <div class="card-title">⏰ Today's Production Tasks
+        <span style="font-size:13px;font-weight:400;color:#6B7280;margin-left:8px;">{{ today|date:"F d, Y" }}</span>
+    </div>
+    {% if todays_tasks %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Order</th>
+                    <th>Cake</th>
+                    <th>Staff</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in todays_tasks %}
+                <tr>
+                    <td>
+                        {% if task.task_type == 'baking' %}🔥
+                        {% elif task.task_type == 'frosting' %}❄️
+                        {% elif task.task_type == 'decorating' %}🎨
+                        {% elif task.task_type == 'packaging' %}📦
+                        {% else %}✅{% endif %}
+                        {{ task.get_task_type_display }}
+                    </td>
+                    <td><a href="{% url 'order_detail' task.orderitemID.orderID.orderID %}" style="color:#E8509A;">#{{ task.orderitemID.orderID.orderID }}</a></td>
+                    <td style="font-size:13px;">{{ task.orderitemID.cakeID }}</td>
+                    <td>{{ task.staffID.name|default:"—" }}</td>
+                    <td style="font-size:12px;color:#6B7280;">{{ task.starttime|time:"H:i" }} – {{ task.endtime|time:"H:i" }}</td>
+                    <td><span class="badge badge-{{ task.status }}">{{ task.get_status_display }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">🍰</div>
+        <p>No production tasks scheduled for today.</p>
+    </div>
+    {% endif %}
+    <div style="margin-top:14px;">
+        <a href="{% url 'production_timeline' %}" class="btn btn-outline btn-sm">View Full Timeline →</a>
+    </div>
+</div>
+
+{% endblock %}

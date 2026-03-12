@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Production Timeline — Cherry Michelle's Cakery{% endblock %}
+{% block page_title %}⏰ Production Timeline{% endblock %}
+
+{% block content %}
+<!-- Date navigation -->
+<div class="card" style="margin-bottom:24px;">
+    <div style="display:flex;align-items:center;gap:16px;justify-content:center;">
+        <a href="?date={{ prev_date|date:'Y-m-d' }}" class="btn btn-outline btn-sm">← Previous Day</a>
+        <div style="text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#3D1A0A;">
+                {{ selected_date|date:"F d, Y" }}
+            </div>
+            {% if selected_date == today %}
+                <div style="color:#E8509A;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Today</div>
+            {% endif %}
+        </div>
+        <a href="?date={{ next_date|date:'Y-m-d' }}" class="btn btn-outline btn-sm">Next Day →</a>
+        <form method="GET" style="margin-left:16px;">
+            <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}" class="search-input" style="min-width:160px;" onchange="this.form.submit()">
+        </form>
+    </div>
+</div>
+
+{% if tasks %}
+<!-- Stats bar -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+    {% for status, label in task_status_labels.items %}{% endfor %}
+    <div class="card" style="padding:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:#95A5A6;">{{ tasks|length }}</div>
+        <div style="font-size:12px;color:#6B7280;">Total Tasks</div>
+    </div>
+    <div class="card" style="padding:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:#F39C12;">{{ tasks|dictsort:"status"|length }}</div>
+        <div style="font-size:12px;color:#6B7280;">In Progress</div>
+    </div>
+    <div class="card" style="padding:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:#27AE60;">–</div>
+        <div style="font-size:12px;color:#6B7280;">Completed</div>
+    </div>
+    <div class="card" style="padding:16px;text-align:center;">
+        <div style="font-size:24px;font-weight:700;color:#3D1A0A;">{{ staff_tasks|length }}</div>
+        <div style="font-size:12px;color:#6B7280;">Staff Working</div>
+    </div>
+</div>
+
+<!-- Staff timeline blocks -->
+{% for staff, staff_task_list in staff_tasks.items %}
+<div class="card" style="margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#E8509A,#C43578);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;">
+            {{ staff.name|first|upper }}
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:16px;">{{ staff.name }}</div>
+            <div style="font-size:12px;color:#6B7280;">{{ staff.get_role_display }}</div>
+        </div>
+        <div style="margin-left:auto;">
+            <span style="background:#FDF2F8;color:#E8509A;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">
+                {{ staff_task_list|length }} task{{ staff_task_list|length|pluralize }}
+            </span>
+        </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;">
+        {% for task in staff_task_list %}
+        <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:#FDFAF7;border-radius:10px;border-left:4px solid
+            {% if task.status == 'done' %}#22C55E{% elif task.status == 'in_progress' %}#F59E0B{% elif task.status == 'on_hold' %}#EF4444{% else %}#9CA3AF{% endif %};">
+            <div style="font-size:22px;">
+                {% if task.task_type == 'baking' %}🔥
+                {% elif task.task_type == 'frosting' %}❄️
+                {% elif task.task_type == 'decorating' %}🎨
+                {% elif task.task_type == 'packaging' %}📦
+                {% else %}✅{% endif %}
+            </div>
+            <div style="flex:1;">
+                <div style="font-weight:600;font-size:14px;">{{ task.get_task_type_display }}</div>
+                <div style="font-size:12px;color:#6B7280;">
+                    Order #{{ task.orderitemID.orderID.orderID }} — {{ task.orderitemID.cakeID.get_flavor_display }} {{ task.orderitemID.cakeID.get_caketype_display }}
+                    ({{ task.orderitemID.cakeID.get_size_display }})
+                </div>
+                <div style="font-size:12px;color:#E8509A;font-weight:600;">
+                    Customer: {{ task.orderitemID.orderID.customerID.name }}
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:13px;font-weight:600;">{{ task.starttime|time:"H:i" }} – {{ task.endtime|time:"H:i" }}</div>
+                <span class="badge badge-{{ task.status }}" style="margin-top:4px;">{{ task.get_status_display }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <div class="empty-icon">🍰</div>
+        <p>No production tasks scheduled for {{ selected_date|date:"F d, Y" }}.</p>
+        <div style="margin-top:16px;">
+            <a href="/admin/orders/productiontask/add/" class="btn btn-primary">➕ Add Task</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

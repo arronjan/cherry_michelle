@@ -1,0 +1,48 @@
+{% extends 'orders/base.html' %}
+{% block title %}Production – Cakery{% endblock %}
+{% block topbar_title %}🍳 Production Schedule{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title"><span>🍳</span> Production Schedule</div>
+    <a href="{% url 'production_add' %}" class="btn btn-primary">➕ Schedule Task</a>
+</div>
+<div class="card">
+    <div class="card-header">
+        <form method="get" style="display:flex; gap:10px;">
+            <input type="date" name="date" value="{{ date_filter }}" class="form-control" style="max-width:200px;">
+            <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+            {% if date_filter %}<a href="{% url 'production_list' %}" class="btn btn-outline btn-sm">Clear</a>{% endif %}
+        </form>
+        <span style="color:var(--text-light); font-size:0.82rem;">{{ tasks.count }} task(s)</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Date</th><th>Time</th><th>Task</th><th>Cake</th><th>Order</th><th>Staff</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.productiondate }}</td>
+                    <td style="font-size:0.82rem;">{{ task.starttime }}–{{ task.endtime }}</td>
+                    <td>{{ task.get_task_type_display }}</td>
+                    <td>{{ task.orderitemID.cakeID.get_flavor_display }}</td>
+                    <td><a href="{% url 'order_detail' task.orderitemID.orderID.pk %}" style="color:var(--rose);">#{{ task.orderitemID.orderID.orderID }}</a></td>
+                    <td>{{ task.staffID.name|default:"—" }}</td>
+                    <td><span class="badge badge-{{ task.status }}">{{ task.get_status_display }}</span></td>
+                    <td>
+                        <a href="{% url 'production_edit' task.pk %}" class="btn-icon">✏️</a>
+                        <a href="{% url 'production_delete' task.pk %}" class="btn-icon">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8">
+                    <div class="empty-state">
+                        <div class="empty-icon">🍳</div>
+                        <p>No production tasks found.</p>
+                    </div>
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

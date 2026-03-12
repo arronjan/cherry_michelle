@@ -1,0 +1,197 @@
+/* Cherry Michelle's Cakery — Custom Admin Styles */
+
+:root {
+    --primary: #E8509A;
+    --primary-dark: #C43578;
+    --secondary: #D4A853;
+    --dark-bg: #3D1A0A;
+    --sidebar-bg: #2D1306;
+}
+
+/* Header */
+#header {
+    background: linear-gradient(135deg, #3D1A0A 0%, #6B2D10 100%) !important;
+    padding: 12px 20px !important;
+}
+
+#branding h1 {
+    font-size: 20px !important;
+    color: #D4A853 !important;
+    font-family: Georgia, serif !important;
+}
+
+#branding h1 a:link, #branding h1 a:visited {
+    color: #D4A853 !important;
+}
+
+#user-tools {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+#user-tools a {
+    color: #F9C8E1 !important;
+    border-bottom: 1px solid rgba(249,200,225,0.3) !important;
+}
+
+#user-tools a:hover {
+    color: white !important;
+    border-bottom-color: white !important;
+}
+
+/* Navigation */
+.module h2, .module caption, .inline-group h2 {
+    background: linear-gradient(135deg, #E8509A, #C43578) !important;
+    color: white !important;
+    padding: 10px 14px !important;
+    border-radius: 6px 6px 0 0 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Buttons */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #E8509A !important;
+    border-color: #C43578 !important;
+    border-radius: 6px !important;
+    padding: 8px 16px !important;
+}
+
+.button:hover, input[type=submit]:hover {
+    background: #C43578 !important;
+    border-color: #A02860 !important;
+}
+
+.button.default, input[type=submit].default {
+    background: linear-gradient(135deg, #E8509A, #C43578) !important;
+    font-weight: 700 !important;
+}
+
+/* Links */
+a:link, a:visited {
+    color: #C43578;
+}
+
+a:hover {
+    color: #E8509A;
+}
+
+/* Breadcrumbs */
+div.breadcrumbs {
+    background: #FFF8F2 !important;
+    padding: 10px 20px !important;
+    color: #6B7280 !important;
+    border-bottom: 1px solid #F0E8DF !important;
+}
+
+div.breadcrumbs a {
+    color: #E8509A !important;
+}
+
+/* Dashboard modules */
+.dashboard .module table td a {
+    color: #C43578 !important;
+}
+
+/* Change list */
+#changelist-filter {
+    background: #FFF8F2 !important;
+    border-left: 1px solid #F0E8DF !important;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #5C3317, #8B5E3C) !important;
+    color: white !important;
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+}
+
+#changelist-filter li.selected a {
+    color: #E8509A !important;
+    font-weight: 700 !important;
+}
+
+/* Table */
+#result_list th {
+    background: #FDF2F8 !important;
+    color: #3D1A0A !important;
+    border-bottom: 2px solid #F0E8DF !important;
+}
+
+#result_list tr.row1 {
+    background: white !important;
+}
+
+#result_list tr.row2 {
+    background: #FDFAF7 !important;
+}
+
+#result_list tr:hover td {
+    background: #FFF0F7 !important;
+}
+
+/* Action bar */
+.action-counter {
+    color: #E8509A !important;
+}
+
+/* Paginator */
+.paginator {
+    color: #6B7280 !important;
+}
+
+.paginator a, .paginator .this-page {
+    color: #E8509A !important;
+}
+
+/* Object tools */
+ul.object-tools a {
+    background: #E8509A !important;
+    border-radius: 20px !important;
+}
+
+ul.object-tools a:hover {
+    background: #C43578 !important;
+}
+
+/* Form fields */
+.form-row {
+    border-bottom: 1px solid #F5EEE8 !important;
+    padding: 12px 0 !important;
+}
+
+input[type=text], input[type=password], input[type=email], select, textarea {
+    border: 1.5px solid #E5D5C8 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    transition: border-color 0.2s !important;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, select:focus, textarea:focus {
+    border-color: #E8509A !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(232,80,154,0.1) !important;
+}
+
+/* Success messages */
+.messagelist .success {
+    background: #D1FAE5 !important;
+    color: #065F46 !important;
+    border-left: 4px solid #22C55E !important;
+}
+
+.messagelist .error {
+    background: #FEE2E2 !important;
+    color: #991B1B !important;
+    border-left: 4px solid #EF4444 !important;
+}
+
+/* Submit row */
+.submit-row {
+    background: #FFF8F2 !important;
+    border-top: 1px solid #F0E8DF !important;
+    border-radius: 0 0 8px 8px !important;
+    padding: 12px 16px !important;
+}

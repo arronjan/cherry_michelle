@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Customers — Cherry Michelle's Cakery{% endblock %}
+{% block page_title %}👥 Customers{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom:24px;">
+    <form method="GET" style="display:flex;gap:12px;align-items:center;">
+        <input type="text" name="q" value="{{ search }}" placeholder="🔍  Search customers..." class="search-input">
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if search %}<a href="{% url 'customer_list' %}" class="btn btn-outline">Clear</a>{% endif %}
+        <div style="margin-left:auto;">
+            <a href="/admin/orders/customer/add/" class="btn btn-primary">➕ New Customer</a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-title">All Customers <span style="font-size:14px;font-weight:400;color:#6B7280;">({{ customers.count }})</span></div>
+    {% if customers %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Orders</th>
+                    <th>Address</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td style="color:#6B7280;">#{{ customer.customerID }}</td>
+                    <td style="font-weight:600;">{{ customer.name }}</td>
+                    <td>{{ customer.number }}</td>
+                    <td style="font-size:13px;color:#6B7280;">{{ customer.email }}</td>
+                    <td>
+                        <span style="background:#FDF2F8;color:#E8509A;padding:3px 10px;border-radius:20px;font-weight:700;font-size:12px;">
+                            🎂 {{ customer.order_count }}
+                        </span>
+                    </td>
+                    <td style="font-size:13px;color:#6B7280;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ customer.address }}</td>
+                    <td>
+                        <a href="/admin/orders/customer/{{ customer.customerID }}/change/" class="btn btn-outline btn-sm">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">👥</div>
+        <p>No customers found. <a href="/admin/orders/customer/add/" style="color:#E8509A;">Add one?</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

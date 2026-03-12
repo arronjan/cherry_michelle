@@ -1,0 +1,37 @@
+{% extends 'orders/base.html' %}
+{% block title %}Payments – Cakery{% endblock %}
+{% block topbar_title %}💳 Payments{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title"><span>💳</span> Payments</div>
+    <a href="{% url 'payment_add' %}" class="btn btn-primary">➕ Record Payment</a>
+</div>
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>#</th><th>Order</th><th>Customer</th><th>Date</th><th>Method</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td>{{ p.paymentID }}</td>
+                    <td><a href="{% url 'order_detail' p.orderID.pk %}" style="color:var(--rose);">#{{ p.orderID.orderID }}</a></td>
+                    <td>{{ p.orderID.customerID.name }}</td>
+                    <td>{{ p.paymentdate }}</td>
+                    <td>{{ p.get_paymentmethod_display }}</td>
+                    <td><strong>₱{{ p.amount }}</strong></td>
+                    <td><span class="badge badge-{{ p.paymentstatus }}">{{ p.get_paymentstatus_display }}</span></td>
+                    <td><a href="{% url 'payment_edit' p.pk %}" class="btn-icon">✏️</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8">
+                    <div class="empty-state">
+                        <div class="empty-icon">💳</div>
+                        <p>No payments recorded yet.</p>
+                    </div>
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

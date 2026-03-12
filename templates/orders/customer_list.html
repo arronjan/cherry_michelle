@@ -1,0 +1,47 @@
+{% extends 'orders/base.html' %}
+{% block title %}Customers – Cakery{% endblock %}
+{% block topbar_title %}👥 Customers{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title"><span>👥</span> Customers</div>
+    <a href="{% url 'customer_add' %}" class="btn btn-primary">➕ Add Customer</a>
+</div>
+<div class="card">
+    <div class="card-header">
+        <form method="get" style="display:flex; gap:10px;">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="🔍 Search customers..." style="max-width:300px;">
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+            {% if q %}<a href="{% url 'customer_list' %}" class="btn btn-outline btn-sm">Clear</a>{% endif %}
+        </form>
+        <span style="color:var(--text-light); font-size:0.82rem;">{{ customers.count }} customer(s)</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for c in customers %}
+                <tr>
+                    <td>{{ c.customerID }}</td>
+                    <td><strong>{{ c.name }}</strong></td>
+                    <td>{{ c.number }}</td>
+                    <td>{{ c.email }}</td>
+                    <td><span class="badge badge-rose">{{ c.orders.count }}</span></td>
+                    <td>
+                        <a href="{% url 'customer_edit' c.pk %}" class="btn-icon">✏️</a>
+                        <a href="{% url 'customer_delete' c.pk %}" class="btn-icon">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">
+                    <div class="empty-state">
+                        <div class="empty-icon">👥</div>
+                        <p>No customers yet.</p>
+                        <a href="{% url 'customer_add' %}" class="btn btn-primary">Add First Customer</a>
+                    </div>
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

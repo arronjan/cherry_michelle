@@ -1,0 +1,67 @@
+{% extends 'orders/base.html' %}
+{% block title %}Orders – Cakery{% endblock %}
+{% block topbar_title %}📋 Orders{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title"><span>📋</span> Orders</div>
+    <a href="{% url 'order_add' %}" class="btn btn-primary">➕ New Order</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <form method="get" class="search-bar" style="margin-bottom:0;">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="🔍 Search by customer or order #..." style="max-width:280px;">
+            <select name="status" class="form-select" style="max-width:180px;">
+                <option value="">All Statuses</option>
+                {% for val, label in status_choices %}
+                <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+            {% if q or status_filter %}<a href="{% url 'order_list' %}" class="btn btn-outline btn-sm">Clear</a>{% endif %}
+        </form>
+        <span style="color:var(--text-light); font-size:0.82rem;">{{ orders.count }} order(s)</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Order Date</th>
+                    <th>Pickup Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><strong>#{{ order.orderID }}</strong></td>
+                    <td>{{ order.customerID.name }}</td>
+                    <td>{{ order.orderdate }}</td>
+                    <td>{{ order.pickupdate }}</td>
+                    <td>₱{{ order.totalprice }}</td>
+                    <td><span class="badge badge-{{ order.orderstatus }}">{{ order.get_orderstatus_display }}</span></td>
+                    <td>
+                        <a href="{% url 'order_detail' order.pk %}" class="btn-icon" title="View">👁️</a>
+                        <a href="{% url 'order_edit' order.pk %}" class="btn-icon" title="Edit">✏️</a>
+                        <a href="{% url 'order_delete' order.pk %}" class="btn-icon" title="Delete">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7">
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>No orders found.</p>
+                        <a href="{% url 'order_add' %}" class="btn btn-primary">Create First Order</a>
+                    </div>
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

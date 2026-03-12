@@ -1,0 +1,40 @@
+{% extends 'orders/base.html' %}
+{% block title %}Cake Menu – Cakery{% endblock %}
+{% block topbar_title %}🎂 Cake Menu{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title"><span>🎂</span> Cake Menu</div>
+    <a href="{% url 'cake_add' %}" class="btn btn-primary">➕ Add Cake</a>
+</div>
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>#</th><th>Type</th><th>Flavor</th><th>Size</th><th>Base Price</th><th>Available</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for cake in cakes %}
+                <tr>
+                    <td>{{ cake.cakeID }}</td>
+                    <td>{{ cake.get_caketype_display }}</td>
+                    <td>{{ cake.get_flavor_display }}</td>
+                    <td>{{ cake.get_size_display }}</td>
+                    <td><strong>₱{{ cake.baseprice }}</strong></td>
+                    <td>{% if cake.is_available %}<span class="badge badge-ready">✓ Yes</span>{% else %}<span class="badge badge-cancelled">✗ No</span>{% endif %}</td>
+                    <td>
+                        <a href="{% url 'cake_edit' cake.pk %}" class="btn-icon">✏️</a>
+                        <a href="{% url 'cake_delete' cake.pk %}" class="btn-icon">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7">
+                    <div class="empty-state">
+                        <div class="empty-icon">🎂</div>
+                        <p>No cakes in menu yet.</p>
+                        <a href="{% url 'cake_add' %}" class="btn btn-primary">Add First Cake</a>
+                    </div>
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

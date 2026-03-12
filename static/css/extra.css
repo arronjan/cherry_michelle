@@ -1,0 +1,8 @@
+/* Extra cake-themed overrides */
+.cake-divider {
+    text-align: center;
+    color: var(--rose-light);
+    letter-spacing: 8px;
+    font-size: 1.1rem;
+    margin: 16px 0;
+}
