@@ -1,5 +1,5 @@
 {% extends 'orders/base.html' %} {% block title %}Dashboard – Cakery{% endblock
-%} {% block topbar_title %}🏠 Dashboard{% endblock %} {% block content %}
+%} {% block topbar_title %} Dashboard{% endblock %} {% block content %}
 <div class="page-header">
   <div>
     <div class="page-header-title">
@@ -9,55 +9,44 @@
       Here's what's happening at the bakery today.
     </p>
   </div>
-  <a href="{% url 'order_add' %}" class="btn btn-primary">➕ New Order</a>
+  <a href="{% url 'order_add' %}" class="btn btn-primary"> New Order</a>
 </div>
-
-<!-- Stats Grid -->
 <div class="stats-grid">
   <div class="stat-card">
-    <div class="stat-icon">📋</div>
     <div class="stat-num">{{ stats.total_orders }}</div>
     <div class="stat-label">Total Orders</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">⏳</div>
     <div class="stat-num">{{ stats.pending_orders }}</div>
     <div class="stat-label">Pending</div>
   </div>
   <div class="stat-card gold">
-    <div class="stat-icon">🍳</div>
     <div class="stat-num">{{ stats.in_production }}</div>
     <div class="stat-label">In Production</div>
   </div>
   <div class="stat-card green">
-    <div class="stat-icon">✅</div>
     <div class="stat-num">{{ stats.ready_orders }}</div>
     <div class="stat-label">Ready Pickup</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">📅</div>
     <div class="stat-num">{{ stats.today_pickups }}</div>
     <div class="stat-label">Today's Pickups</div>
   </div>
   <div class="stat-card brown">
-    <div class="stat-icon">📆</div>
     <div class="stat-num">{{ stats.week_pickups }}</div>
     <div class="stat-label">This Week</div>
   </div>
   <div class="stat-card gold">
-    <div class="stat-icon">💰</div>
     <div class="stat-num" style="font-size: 1.4rem">
       ₱{{ stats.total_revenue|floatformat:0 }}
     </div>
     <div class="stat-label">Revenue</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">👥</div>
     <div class="stat-num">{{ stats.total_customers }}</div>
     <div class="stat-label">Customers</div>
   </div>
 </div>
-
 <div
   style="
     display: grid;
@@ -66,11 +55,10 @@
     margin-bottom: 20px;
   "
 >
-  <!-- Recent Orders -->
   <div class="card">
     <div class="card-header">
-      <span class="card-title">📋 Recent Orders</span>
-      <a href="{% url 'order_list' %}" class="btn btn-outline btn-sm"
+      <span class="card-title"> Recent Orders</span
+      ><a href="{% url 'order_list' %}" class="btn btn-outline btn-sm"
         >View All</a
       >
     </div>
@@ -120,12 +108,10 @@
       </table>
     </div>
   </div>
-
-  <!-- Upcoming Pickups -->
   <div class="card">
     <div class="card-header">
-      <span class="card-title">📅 Upcoming Pickups</span>
-      <span style="font-size: 0.78rem; color: var(--text-light)"
+      <span class="card-title"> Upcoming Pickups</span
+      ><span style="font-size: 0.78rem; color: var(--text-light)"
         >Next 7 days</span
       >
     </div>
@@ -150,11 +136,9 @@
               >
             </td>
             <td>{{ order.customerID.name }}</td>
-            <td
-              style="color:{% if order.pickupdate == today %}var(--rose){% else %}var(--text){% endif %}; font-weight:{% if order.pickupdate == today %}700{% else %}400{% endif %};"
-            >
-              {{ order.pickupdate }}{% if order.pickupdate == today %}
-              🔴{%endif%}
+            <td>
+              {{ order.pickupdate }}{% if order.pickupdate == today %} 🔴{%
+              endif %}
             </td>
             <td>₱{{ order.totalprice }}</td>
           </tr>
@@ -177,16 +161,13 @@
     </div>
   </div>
 </div>
-
-<!-- Today's Production Tasks -->
 <div class="card">
   <div class="card-header">
-    <span class="card-title">🍳 Today's Production Tasks</span>
+    <span class="card-title"> Today's Production Tasks</span>
     <div style="display: flex; gap: 10px">
       <span style="font-size: 0.82rem; color: var(--text-light)"
         >{{ stats.active_tasks }} active</span
-      >
-      <a href="{% url 'production_list' %}" class="btn btn-outline btn-sm"
+      ><a href="{% url 'production_list' %}" class="btn btn-outline btn-sm"
         >Full Schedule</a
       >
     </div>
@@ -223,7 +204,7 @@
             colspan="5"
             style="text-align: center; color: var(--text-light); padding: 24px"
           >
-            🎉 No production tasks scheduled for today
+            No production tasks scheduled for today
           </td>
         </tr>
         {% endfor %}
