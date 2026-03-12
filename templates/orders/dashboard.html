@@ -137,8 +137,7 @@
             </td>
             <td>{{ order.customerID.name }}</td>
             <td>
-              {{ order.pickupdate }}{% if order.pickupdate == today %} 🔴{%
-              endif %}
+              {{ order.pickupdate }}{% if order.pickupdate == today%}🔴{%endif%}
             </td>
             <td>₱{{ order.totalprice }}</td>
           </tr>
