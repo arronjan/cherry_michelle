@@ -153,8 +153,8 @@
             <td
               style="color:{% if order.pickupdate == today %}var(--rose){% else %}var(--text){% endif %}; font-weight:{% if order.pickupdate == today %}700{% else %}400{% endif %};"
             >
-              {{ order.pickupdate }}{% if order.pickupdate == today %} 🔴{%
-              endif %}
+              {{ order.pickupdate }}{% if order.pickupdate == today %}
+              🔴{%endif%}
             </td>
             <td>₱{{ order.totalprice }}</td>
           </tr>
