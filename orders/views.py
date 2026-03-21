@@ -280,3 +280,126 @@ def production_delete(request, pk):
         messages.success(request, 'Task deleted.')
         return redirect('production_list')
     return render(request, 'orders/confirm_delete.html', {'object': task, 'back_url': 'production_list'})
+
+
+# ============================================================
+# CUSTOMER PORTAL VIEWS
+# ============================================================
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import CustomerRegistrationForm, CustomerOrderForm
+from .models import CustomerAccount
+
+
+def home(request):
+    """Public landing page - redirect based on user type"""
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'customer_account'):
+            return redirect('customer_dashboard')
+        return redirect('dashboard')
+    return render(request, 'orders/home.html')
+
+
+def customer_register(request):
+    if request.user.is_authenticated:
+        return redirect('customer_dashboard')
+    form = CustomerRegistrationForm(request.POST or None)
+    if form.is_valid():
+        user = form.save()
+        # Create linked Customer record
+        customer = Customer.objects.create(
+            name=form.cleaned_data['name'],
+            email=form.cleaned_data['email'],
+            number=form.cleaned_data['number'],
+            address=form.cleaned_data['address'],
+        )
+        CustomerAccount.objects.create(user=user, customer=customer)
+        login(request, user)
+        messages.success(request, f'Welcome, {customer.name}! Your account has been created.')
+        return redirect('customer_dashboard')
+    return render(request, 'orders/customer_register.html', {'form': form})
+
+
+def customer_login_view(request):
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'customer_account'):
+            return redirect('customer_dashboard')
+        return redirect('dashboard')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            if hasattr(user, 'customer_account'):
+                return redirect('customer_dashboard')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    return render(request, 'orders/customer_login.html')
+
+
+def customer_logout_view(request):
+    logout(request)
+    return redirect('home')
+
+
+def customer_dashboard(request):
+    if not request.user.is_authenticated or not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    orders = Order.objects.filter(customerID=customer).order_by('-orderdate')
+    return render(request, 'orders/customer_dashboard.html', {
+        'customer': customer,
+        'orders': orders,
+    })
+
+
+def customer_menu(request):
+    cakes = Cake.objects.filter(is_available=True).order_by('caketype', 'flavor')
+    cake_types = {}
+    for cake in cakes:
+        t = cake.get_caketype_display()
+        if t not in cake_types:
+            cake_types[t] = []
+        cake_types[t].append(cake)
+    return render(request, 'orders/customer_menu.html', {'cake_types': cake_types})
+
+
+def customer_place_order(request):
+    if not request.user.is_authenticated or not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    form = CustomerOrderForm(request.POST or None)
+    if form.is_valid():
+        cake = form.cleaned_data['cake']
+        quantity = form.cleaned_data['quantity']
+        order = Order.objects.create(
+            customerID=customer,
+            cakeID=cake,
+            pickupdate=form.cleaned_data['pickupdate'],
+            orderstatus='pending',
+            totalprice=cake.baseprice * quantity,
+        )
+        OrderItem.objects.create(
+            orderID=order,
+            cakeID=cake,
+            quantity=quantity,
+            design_notes=form.cleaned_data['design_notes'],
+            price=cake.baseprice * quantity,
+        )
+        messages.success(request, f'Order #{order.orderID} placed successfully! We will confirm it shortly.')
+        return redirect('customer_order_detail', pk=order.pk)
+    return render(request, 'orders/customer_place_order.html', {'form': form})
+
+
+def customer_order_detail(request, pk):
+    if not request.user.is_authenticated or not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    order = get_object_or_404(Order, pk=pk, customerID=customer)
+    items = order.order_items.select_related('cakeID').all()
+    payments = order.payments.all()
+    return render(request, 'orders/customer_order_detail.html', {
+        'order': order, 'items': items, 'payments': payments
+    })

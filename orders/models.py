@@ -194,3 +194,12 @@ class ProductionTask(models.Model):
 
     class Meta:
         ordering = ['productiondate', 'starttime']
+
+
+class CustomerAccount(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_account')
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name='account', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Account: {self.user.username}"

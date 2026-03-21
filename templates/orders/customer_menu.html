@@ -1,0 +1,63 @@
+{% extends 'orders/customer_base.html' %} {% block title %}Our Menu
+–CherryMichelle's{% endblock %} {% block content %}
+<div class="page-title">Our Cake Menu</div>
+<p class="page-sub">All cakes are handcrafted fresh to order</p>
+
+{% for type_name, cakes in cake_types.items %}
+<div class="card" style="margin-bottom: 20px">
+  <div class="card-header">
+    <span class="card-title">{{ type_name }}</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Flavor</th>
+        <th>Size</th>
+        <th>Base Price</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cake in cakes %}
+      <tr>
+        <td>
+          <strong>{{ cake.get_flavor_display }}</strong>
+          {% if cake.description %}
+          <br /><small style="color: var(--text-light)"
+            >{{ cake.description }}</small
+          >
+          {% endif %}
+        </td>
+        <td>{{ cake.get_size_display }}</td>
+        <td style="color: var(--rose-dark); font-weight: 700">
+          &#8369;{{ cake.baseprice }}
+        </td>
+        <td>
+          <a
+            href="{% url 'customer_place_order' %}?cake={{ cake.cakeID }}"
+            class="btn btn-outline btn-sm"
+            >Order This</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% empty %}
+<div class="card">
+  <div class="card-body" style="text-align: center; padding: 40px">
+    <div style="font-size: 2.5rem; margin-bottom: 12px">🎂</div>
+    <p style="color: var(--text-light)">
+      Menu coming soon! Please contact us directly to place an order.
+    </p>
+  </div>
+</div>
+{% endfor %}
+
+<div style="text-align: center; margin-top: 8px">
+  <a href="{% url 'customer_place_order' %}" class="btn btn-primary"
+    >Place a Custom Order</a
+  >
+</div>
+{% endblock %}

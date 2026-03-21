@@ -1,0 +1,83 @@
+{% extends 'orders/customer_base.html' %}
+{%blocktitle%}MyOrders–CherryMichelle's{% endblock %} {% block content %}
+<div
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  "
+>
+  <div class="page-title">Hello, {{ customer.name }}!</div>
+  <a href="{% url 'customer_place_order' %}" class="btn btn-primary"
+    >Place New Order</a
+  >
+</div>
+<p class="page-sub">Here are all your orders with Cherry Michelle's</p>
+
+{% if orders %}
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">My Orders</span>
+    <span style="color: var(--text-light); font-size: 0.82rem"
+      >{{ orders.count }} total</span
+    >
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Cake</th>
+        <th>Pickup Date</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td><strong>#{{ order.orderID }}</strong></td>
+        <td>{{ order.cakeID|default:"Custom Order" }}</td>
+        <td>{{ order.pickupdate }}</td>
+        <td>&#8369;{{ order.totalprice }}</td>
+        <td>
+          <span class="badge badge-{{ order.orderstatus }}"
+            >{{ order.get_orderstatus_display }}</span
+          >
+        </td>
+        <td>
+          <a
+            href="{% url 'customer_order_detail' order.pk %}"
+            class="btn btn-outline btn-sm"
+            >View</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card">
+  <div class="card-body" style="text-align: center; padding: 48px">
+    <div style="font-size: 3rem; margin-bottom: 16px">🎂</div>
+    <div
+      style="
+        font-family: &quot;Playfair Display&quot;, serif;
+        font-size: 1.3rem;
+        color: var(--rose-dark);
+        margin-bottom: 8px;
+      "
+    >
+      No orders yet!
+    </div>
+    <p style="color: var(--text-light); margin-bottom: 24px">
+      Browse our menu and place your first order.
+    </p>
+    <a href="{% url 'customer_place_order' %}" class="btn btn-primary"
+      >Order Now</a
+    >
+  </div>
+</div>
+{% endif %} {% endblock %}

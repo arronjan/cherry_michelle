@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cherry Michelle's Cakes & Pastries</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --rose: #c8536a;
+        --rose-dark: #8b2f42;
+        --rose-light: #f5c6cf;
+        --cream: #fdf6f0;
+        --cream-dark: #f4e8dc;
+        --gold: #c9973a;
+        --brown: #5c3d2e;
+        --white: #fff;
+      }
+      body {
+        font-family: "Lato", sans-serif;
+        background: var(--cream);
+        color: var(--brown);
+      }
+      nav {
+        background: var(--white);
+        padding: 16px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--rose-light);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(90, 20, 30, 0.06);
+      }
+      .nav-brand {
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        color: var(--rose-dark);
+        font-weight: 700;
+      }
+      .nav-links {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+      .nav-link {
+        text-decoration: none;
+        color: var(--brown);
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+      }
+      .nav-link:hover {
+        background: var(--cream-dark);
+      }
+      .nav-btn {
+        background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+        color: #fff;
+        padding: 9px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 700;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(200, 83, 106, 0.3);
+      }
+      .nav-btn:hover {
+        transform: translateY(-1px);
+      }
+      .hero {
+        background: linear-gradient(
+          135deg,
+          var(--rose-dark) 0%,
+          var(--brown) 100%
+        );
+        color: #fff;
+        text-align: center;
+        padding: 100px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      .hero-title {
+        font-family: "Playfair Display", serif;
+        font-size: 3.2rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+      .hero-title em {
+        color: var(--gold);
+        font-style: italic;
+      }
+      .hero-sub {
+        font-size: 1.05rem;
+        opacity: 0.85;
+        margin-bottom: 36px;
+        line-height: 1.7;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-hero-primary {
+        background: linear-gradient(135deg, var(--gold), #a07830);
+        color: #fff;
+        padding: 14px 32px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.2s;
+        box-shadow: 0 4px 16px rgba(201, 151, 58, 0.4);
+      }
+      .btn-hero-primary:hover {
+        transform: translateY(-2px);
+      }
+      .btn-hero-outline {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        color: #fff;
+        padding: 14px 32px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .btn-hero-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .features {
+        padding: 80px 48px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        color: var(--rose-dark);
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .section-sub {
+        text-align: center;
+        color: #a07050;
+        margin-bottom: 48px;
+        font-size: 0.95rem;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .feature-card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(90, 30, 30, 0.08);
+        border-top: 3px solid var(--rose);
+        transition: transform 0.2s;
+      }
+      .feature-card:hover {
+        transform: translateY(-4px);
+      }
+      .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+      }
+      .feature-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        color: var(--rose-dark);
+        margin-bottom: 8px;
+      }
+      .feature-desc {
+        color: #a07050;
+        font-size: 0.88rem;
+        line-height: 1.7;
+      }
+      .cta {
+        background: var(--rose-dark);
+        color: #fff;
+        text-align: center;
+        padding: 64px 24px;
+      }
+      .cta-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        margin-bottom: 12px;
+      }
+      .cta-sub {
+        opacity: 0.8;
+        margin-bottom: 28px;
+      }
+      .btn-cta {
+        display: inline-block;
+        background: var(--gold);
+        color: #fff;
+        padding: 13px 32px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .btn-cta:hover {
+        background: #a07830;
+        transform: translateY(-1px);
+      }
+      footer {
+        background: var(--brown);
+        color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+        padding: 20px;
+        font-size: 0.82rem;
+      }
+      @media (max-width: 768px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-title {
+          font-size: 2rem;
+        }
+        nav {
+          padding: 14px 20px;
+        }
+        .features {
+          padding: 48px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-brand">Cherry Michelle's Cakes & Pastries</div>
+      <div class="nav-links">
+        <a href="{% url 'customer_menu' %}" class="nav-link">Our Menu</a>
+        <a href="{% url 'customer_login' %}" class="nav-link">Sign In</a>
+        <a href="{% url 'customer_register' %}" class="nav-btn">Order Now</a>
+      </div>
+    </nav>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-tag">Handcrafted with Love</div>
+        <h1 class="hero-title">Custom Cakes for Every <em>Sweet Moment</em></h1>
+        <p class="hero-sub">
+          From birthdays to weddings, we craft beautiful cakes tailored just for
+          you. Order online and pick up fresh from our bakery.
+        </p>
+        <div class="hero-btns">
+          <a href="{% url 'customer_register' %}" class="btn-hero-primary"
+            >Start Your Order</a
+          >
+          <a href="{% url 'customer_menu' %}" class="btn-hero-outline"
+            >Browse Our Menu</a
+          >
+        </div>
+      </div>
+    </section>
+    <section class="features">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub">Ordering your dream cake has never been easier</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">👤</div>
+          <div class="feature-title">Create an Account</div>
+          <div class="feature-desc">
+            Sign up in seconds. We just need your name and contact details to
+            get started.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎂</div>
+          <div class="feature-title">Choose Your Cake</div>
+          <div class="feature-desc">
+            Browse our menu of flavors, sizes, and styles. Add your custom
+            design notes.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <div class="feature-title">Pick Your Date</div>
+          <div class="feature-desc">
+            Select your pickup date and we'll have your cake fresh and ready for
+            you.
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="cta">
+      <div class="cta-title">Ready to Order?</div>
+      <p class="cta-sub">
+        Create your account and place your custom order today
+      </p>
+      <a href="{% url 'customer_register' %}" class="btn-cta">Get Started</a>
+    </section>
+    <footer>
+      Cherry Michelle's Cakes & Pastries — Made with love & flour
+      <span style="margin-left: 16px"
+        ><a
+          href="{% url 'login' %}"
+          style="color: rgba(255, 255, 255, 0.3); font-size: 0.75rem"
+          >Staff Login</a
+        ></span
+      >
+    </footer>
+  </body>
+</html>

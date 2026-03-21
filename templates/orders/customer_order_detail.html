@@ -1,0 +1,126 @@
+{% extends 'orders/customer_base.html' %} {% block title %}
+Order#{{order.orderID }} – Cherry Michelle's{% endblock %} {% block content %}
+<div
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  "
+>
+  <div class="page-title">Order #{{ order.orderID }}</div>
+  <a href="{% url 'customer_dashboard' %}" class="btn btn-outline"
+    >Back to My Orders</a
+  >
+</div>
+<p class="page-sub">Placed on {{ order.orderdate }}</p>
+
+<div
+  style="
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  "
+>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Order Status</span></div>
+    <div class="card-body" style="text-align: center; padding: 32px">
+      <div style="font-size: 2.5rem; margin-bottom: 12px">
+        {% if order.orderstatus == 'pending' %}⏳ {% elif order.orderstatus ==
+        'confirmed' %}✅ {% elif order.orderstatus == 'in_production' %}🍳 {%
+        elif order.orderstatus == 'ready' %}🎂 {% elif order.orderstatus ==
+        'completed' %}🎉 {% else %}❌{% endif %}
+      </div>
+      <span
+        class="badge badge-{{ order.orderstatus }}"
+        style="font-size: 0.9rem; padding: 6px 16px"
+        >{{ order.get_orderstatus_display }}</span
+      >
+      <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-light)">
+        Pickup Date: <strong>{{ order.pickupdate }}</strong>
+      </p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Order Summary</span></div>
+    <div class="card-body">
+      {% for item in items %}
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          font-size: 0.9rem;
+        "
+      >
+        <span>{{ item.cakeID.get_flavor_display }} x{{ item.quantity }}</span>
+        <strong>&#8369;{{ item.price }}</strong>
+      </div>
+      {% if item.design_notes %}
+      <p
+        style="font-size: 0.82rem; color: var(--text-light); margin-bottom: 8px"
+      >
+        Notes: {{ item.design_notes }}
+      </p>
+      {% endif %} {% endfor %}
+      <div
+        style="
+          border-top: 1px solid var(--cream-dark);
+          padding-top: 10px;
+          margin-top: 10px;
+          display: flex;
+          justify-content: space-between;
+        "
+      >
+        <strong>Total</strong>
+        <strong style="color: var(--rose-dark); font-size: 1.1rem"
+          >&#8369;{{ order.totalprice }}</strong
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-title">Payment Status</span></div>
+  <div class="card-body">
+    {% if payments %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Method</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in payments %}
+        <tr>
+          <td>{{ p.paymentdate }}</td>
+          <td>{{ p.get_paymentmethod_display }}</td>
+          <td>&#8369;{{ p.amount }}</td>
+          <td>
+            <span class="badge badge-{{ p.paymentstatus }}"
+              >{{ p.get_paymentstatus_display }}</span
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-light); font-size: 0.9rem">
+      No payment recorded yet. Our staff will contact you for payment details.
+    </p>
+    {% endif %}
+  </div>
+</div>
+
+<div style="text-align: center; margin-top: 8px">
+  <a href="{% url 'customer_place_order' %}" class="btn btn-primary"
+    >Place Another Order</a
+  >
+</div>
+{% endblock %}

@@ -60,3 +60,10 @@ admin.site.register(ProductionTask, ProductionTaskAdmin)
 admin.site.site_header = "Cherry Michelle's Cakes & Pastries"
 admin.site.site_title = "Cakery Admin"
 admin.site.index_title = "Bakery Management System"
+
+
+from .models import CustomerAccount
+
+@admin.register(CustomerAccount)
+class CustomerAccountAdmin(admin.ModelAdmin):
+    list_display = ['user', 'customer', 'created_at']

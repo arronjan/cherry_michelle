@@ -91,3 +91,38 @@ class ProductionTaskForm(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'form-select'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
+
+
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class CustomerRegistrationForm(UserCreationForm):
+    name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}))
+    number = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}))
+    address = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Your Address'}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'name', 'email', 'number', 'address', 'password1', 'password2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Choose a username'})
+        self.fields['password1'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Password'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Confirm Password'})
+
+
+class CustomerOrderForm(forms.Form):
+    cake = forms.ModelChoiceField(
+        queryset=Cake.objects.filter(is_available=True),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Choose Cake'
+    )
+    quantity = forms.IntegerField(min_value=1, initial=1, widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 1}))
+    pickupdate = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
+    design_notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Any special design requests? (optional)'}),
+        label='Design Notes'
+    )

@@ -1,0 +1,45 @@
+{% extends 'orders/customer_base.html' %}
+{%blocktitle%}CreateAccount–CherryMichelle's{% endblock %} {% block content %}
+<div style="max-width: 520px; margin: 0 auto">
+  <div class="page-title">Create Your Account</div>
+  <p class="page-sub">Sign up to start ordering your custom cakes</p>
+  <div class="card">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %} {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }} {% if field.errors %}
+          <div style="color: #842029; font-size: 0.8rem; margin-top: 4px">
+            {{ field.errors.0 }}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <button
+          type="submit"
+          class="btn btn-primary"
+          style="width: 100%; justify-content: center; margin-top: 8px"
+        >
+          Create Account
+        </button>
+      </form>
+      <p
+        style="
+          text-align: center;
+          margin-top: 16px;
+          font-size: 0.85rem;
+          color: var(--text-light);
+        "
+      >
+        Already have an account?
+        <a
+          href="{% url 'customer_login' %}"
+          style="color: var(--rose); font-weight: 700"
+          >Sign In</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
