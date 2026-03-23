@@ -6,7 +6,8 @@ from django.utils import timezone
 from datetime import date, timedelta
 from .models import Customer, Cake, Order, OrderItem, Payment, Staff, ProductionTask
 from .forms import CustomerForm, CakeForm, OrderForm, OrderItemForm, PaymentForm, StaffForm, ProductionTaskForm
-
+from django.contrib.auth.models import User as AuthUser
+from .forms import StaffCreationForm
 
 @login_required
 def dashboard(request):
@@ -403,3 +404,21 @@ def customer_order_detail(request, pk):
     return render(request, 'orders/customer_order_detail.html', {
         'order': order, 'items': items, 'payments': payments
     })
+
+
+@login_required
+def staff_add_v2(request):
+    form = StaffCreationForm(request.POST or None)
+    if form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        if AuthUser.objects.filter(username=username).exists():
+            form.add_error('username', 'Username already exists.')
+        else:
+            user = AuthUser.objects.create_user(username=username, password=password)
+            staff = form.save(commit=False)
+            staff.user = user
+            staff.save()
+            messages.success(request, f'Staff account for {staff.name} created!')
+            return redirect('staff_list')
+    return render(request, 'orders/staff_add.html', {'form': form, 'title': 'Add Staff Account'})

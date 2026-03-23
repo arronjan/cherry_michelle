@@ -45,7 +45,7 @@ urlpatterns = [
 
     # Staff - Staff
     path('staff/', views.staff_list, name='staff_list'),
-    path('staff/add/', views.staff_add, name='staff_add'),
+    path('staff/add/', views.staff_add_v2, name='staff_add'),
     path('staff/<int:pk>/edit/', views.staff_edit, name='staff_edit'),
     path('staff/<int:pk>/delete/', views.staff_delete, name='staff_delete'),
 
