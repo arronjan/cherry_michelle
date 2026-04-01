@@ -4,7 +4,9 @@
 {% block content %}
 <div class="page-header">
     <div class="page-header-title"><span>🍳</span> Production Schedule</div>
+    {% if request.user.is_superuser %}
     <a href="{% url 'production_add' %}" class="btn btn-primary">➕ Schedule Task</a>
+    {% endif %}
 </div>
 <div class="card">
     <div class="card-header">
@@ -30,7 +32,7 @@
                     <td><span class="badge badge-{{ task.status }}">{{ task.get_status_display }}</span></td>
                     <td>
                         <a href="{% url 'production_edit' task.pk %}" class="btn-icon">✏️</a>
-                        <a href="{% url 'production_delete' task.pk %}" class="btn-icon">🗑️</a>
+                        {% if request.user.is_superuser %}<a href="{% url 'production_delete' task.pk %}" class="btn-icon">🗑️</a>{% endif %}
                     </td>
                 </tr>
                 {% empty %}

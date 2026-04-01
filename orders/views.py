@@ -238,6 +238,9 @@ def staff_edit(request, pk):
 @login_required
 def staff_delete(request, pk):
     staff = get_object_or_404(Staff, pk=pk)
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can delete staff.')
+        return redirect('staff_list')
     if request.method == 'POST':
         staff.delete()
         messages.success(request, 'Staff removed.')
@@ -257,6 +260,9 @@ def production_list(request):
 @login_required
 def production_add(request):
     form = ProductionTaskForm(request.POST or None)
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can add production tasks.')
+        return redirect('production_list')
     if form.is_valid():
         form.save()
         messages.success(request, 'Production task scheduled!')
@@ -276,6 +282,9 @@ def production_edit(request, pk):
 @login_required
 def production_delete(request, pk):
     task = get_object_or_404(ProductionTask, pk=pk)
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can delete production tasks.')
+        return redirect('production_list')
     if request.method == 'POST':
         task.delete()
         messages.success(request, 'Task deleted.')
@@ -405,9 +414,11 @@ def customer_order_detail(request, pk):
         'order': order, 'items': items, 'payments': payments
     })
 
-
 @login_required
 def staff_add_v2(request):
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can add staff.')
+        return redirect('staff_list')
     form = StaffCreationForm(request.POST or None)
     if form.is_valid():
         username = form.cleaned_data['username']

@@ -4,7 +4,9 @@
 {% block content %}
 <div class="page-header">
     <div class="page-header-title"><span>👨‍🍳</span> Staff</div>
+    {% if request.user.is_superuser %}
     <a href="{% url 'staff_add' %}" class="btn btn-primary">➕ Add Staff</a>
+    {% endif %}
 </div>
 <div class="card">
     <div class="table-wrap">
@@ -21,7 +23,7 @@
                     <td>{{ s.tasks.count }}</td>
                     <td>
                         <a href="{% url 'staff_edit' s.pk %}" class="btn-icon">✏️</a>
-                        <a href="{% url 'staff_delete' s.pk %}" class="btn-icon">🗑️</a>
+                        {% if request.user.is_superuser %}<a href="{% url 'staff_delete' s.pk %}" class="btn-icon">🗑️</a>{% endif %}
                     </td>
                 </tr>
                 {% empty %}
