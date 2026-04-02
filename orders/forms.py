@@ -121,6 +121,11 @@ class CustomerOrderForm(forms.Form):
     )
     quantity = forms.IntegerField(min_value=1, initial=1, widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 1}))
     pickupdate = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
+    payment_method = forms.ChoiceField(
+        choices=[('cash', 'Cash'), ('gcash', 'GCash')],
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label='Payment Method'
+    )
     design_notes = forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Any special design requests? (optional)'}),

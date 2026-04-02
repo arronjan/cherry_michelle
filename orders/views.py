@@ -398,6 +398,12 @@ def customer_place_order(request):
             design_notes=form.cleaned_data['design_notes'],
             price=cake.baseprice * quantity,
         )
+        Payment.objects.create(
+            orderID=order,
+            paymentmethod=form.cleaned_data['payment_method'],
+            paymentstatus='pending',
+            amount=cake.baseprice * quantity,
+        )
         messages.success(request, f'Order #{order.orderID} placed successfully! We will confirm it shortly.')
         return redirect('customer_order_detail', pk=order.pk)
     return render(request, 'orders/customer_place_order.html', {'form': form})
