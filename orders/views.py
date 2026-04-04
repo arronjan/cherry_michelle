@@ -10,6 +10,8 @@ from .models import Customer, Cake, Order, OrderItem, Payment, Staff, Production
 from .forms import CustomerForm, CakeForm, OrderForm, OrderItemForm, PaymentForm, StaffForm, ProductionTaskForm
 from django.contrib.auth.models import User as AuthUser
 from .forms import StaffCreationForm
+import random
+import string
 
 @login_required
 def dashboard(request):
@@ -547,4 +549,94 @@ def reports(request):
         'top_cakes': top_cakes,
         'recent_payments': recent_payments,
         'orders_by_status': orders_by_status,
+    })
+
+def generate_reference():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=12))
+
+@login_required
+def payment_simulation(request, pk):
+    if not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    order = get_object_or_404(Order, pk=pk, customerID=customer)
+    payment = order.payments.first()
+    return render(request, 'orders/payment_simulation.html', {
+        'order': order,
+        'payment': payment,
+    })
+
+
+@login_required
+def gcash_simulation(request, pk):
+    if not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    order = get_object_or_404(Order, pk=pk, customerID=customer)
+    payment = order.payments.first()
+
+    if request.method == 'POST':
+        gcash_number = request.POST.get('gcash_number')
+        if gcash_number and len(gcash_number) == 11:
+            if payment:
+                payment.paymentstatus = 'paid'
+                payment.paymentmethod = 'gcash'
+                payment.reference_number = generate_reference()
+                payment.save()
+            else:
+                Payment.objects.create(
+                    orderID=order,
+                    paymentmethod='gcash',
+                    paymentstatus='paid',
+                    amount=order.totalprice,
+                    reference_number=generate_reference(),
+                )
+            return redirect('payment_success', pk=pk)
+        else:
+            messages.error(request, 'Please enter a valid 11-digit GCash number.')
+
+    return render(request, 'orders/gcash_simulation.html', {
+        'order': order,
+        'payment': payment,
+    })
+
+
+@login_required
+def cash_simulation(request, pk):
+    if not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    order = get_object_or_404(Order, pk=pk, customerID=customer)
+    payment = order.payments.first()
+
+    if request.method == 'POST':
+        if payment:
+            payment.paymentstatus = 'pending'
+            payment.paymentmethod = 'cash'
+            payment.save()
+        else:
+            Payment.objects.create(
+                orderID=order,
+                paymentmethod='cash',
+                paymentstatus='pending',
+                amount=order.totalprice,
+            )
+        return redirect('payment_success', pk=pk)
+
+    return render(request, 'orders/cash_simulation.html', {
+        'order': order,
+        'payment': payment,
+    })
+
+
+@login_required
+def payment_success(request, pk):
+    if not hasattr(request.user, 'customer_account'):
+        return redirect('customer_login')
+    customer = request.user.customer_account.customer
+    order = get_object_or_404(Order, pk=pk, customerID=customer)
+    payment = order.payments.first()
+    return render(request, 'orders/payment_success.html', {
+        'order': order,
+        'payment': payment,
     })

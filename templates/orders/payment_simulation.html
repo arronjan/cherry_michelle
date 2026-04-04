@@ -1,0 +1,42 @@
+{% extends 'orders/customer_base.html' %}
+{% block title %}Pay for Order #{{ order.orderID }} – Cherry Michelle's{% endblock %}
+{% block content %}
+<div style="max-width:480px; margin:0 auto;">
+    <div class="page-title">Pay for Order #{{ order.orderID }}</div>
+    <p class="page-sub">Choose your payment method</p>
+
+    <div class="card" style="margin-bottom:16px;">
+        <div class="card-body">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="color:var(--text-light);">Order Total</span>
+                <strong style="font-size:1.2rem; color:var(--rose-dark);">&#8369;{{ order.totalprice }}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--text-light);">Pickup Date</span>
+                <strong>{{ order.pickupdate }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <a href="{% url 'gcash_simulation' order.pk %}" style="text-decoration:none;">
+            <div style="background:#0070e0; border-radius:16px; padding:32px 20px; text-align:center; color:#fff; transition:all 0.2s; box-shadow:0 4px 16px rgba(0,112,224,0.3);" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:2.5rem; margin-bottom:12px;">💙</div>
+                <div style="font-size:1.2rem; font-weight:800; letter-spacing:1px; margin-bottom:6px;">GCash</div>
+                <div style="font-size:0.82rem; opacity:0.85;">Pay instantly via GCash</div>
+            </div>
+        </a>
+        <a href="{% url 'cash_simulation' order.pk %}" style="text-decoration:none;">
+            <div style="background:linear-gradient(135deg, var(--rose), var(--rose-dark)); border-radius:16px; padding:32px 20px; text-align:center; color:#fff; transition:all 0.2s; box-shadow:0 4px 16px rgba(200,83,106,0.3);" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:2.5rem; margin-bottom:12px;">💵</div>
+                <div style="font-size:1.2rem; font-weight:800; letter-spacing:1px; margin-bottom:6px;">Cash</div>
+                <div style="font-size:0.82rem; opacity:0.85;">Pay upon pickup</div>
+            </div>
+        </a>
+    </div>
+
+    <div style="text-align:center; margin-top:16px;">
+        <a href="{% url 'customer_order_detail' order.pk %}" style="color:var(--text-light); font-size:0.85rem;">Cancel</a>
+    </div>
+</div>
+{% endblock %}

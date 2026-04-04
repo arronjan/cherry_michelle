@@ -1,0 +1,71 @@
+{% extends 'orders/customer_base.html' %}
+{% block title %}Payment Success – Cherry Michelle's{% endblock %}
+{% block content %}
+<div style="max-width:480px; margin:0 auto; text-align:center;">
+
+    <div class="card">
+        <div class="card-body" style="padding:48px 32px;">
+
+            {% if payment.paymentmethod == 'gcash' %}
+            <!-- GCash Success -->
+            <div style="width:80px; height:80px; background:#0070e0; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:2.5rem;">
+                💙
+            </div>
+            <div style="font-family:'Playfair Display',serif; font-size:1.6rem; color:#0070e0; margin-bottom:8px;">GCash Payment Successful!</div>
+            <p style="color:var(--text-light); margin-bottom:24px;">Your payment has been processed successfully.</p>
+
+            <div style="background:#e8f4fd; border-radius:12px; padding:20px; margin-bottom:24px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="color:#0070e0; font-size:0.82rem;">Reference Number</span>
+                    <strong style="color:#0070e0; letter-spacing:1px;">{{ payment.reference_number }}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="color:var(--text-light); font-size:0.82rem;">Amount Paid</span>
+                    <strong>&#8369;{{ payment.amount }}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="color:var(--text-light); font-size:0.82rem;">Order #</span>
+                    <strong>#{{ order.orderID }}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-light); font-size:0.82rem;">Pickup Date</span>
+                    <strong>{{ order.pickupdate }}</strong>
+                </div>
+            </div>
+
+            {% else %}
+            <!-- Cash Success -->
+            <div style="width:80px; height:80px; background:linear-gradient(135deg, var(--rose), var(--rose-dark)); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:2.5rem;">
+                💵
+            </div>
+            <div style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--rose-dark); margin-bottom:8px;">Order Confirmed!</div>
+            <p style="color:var(--text-light); margin-bottom:24px;">Please prepare your cash payment upon pickup.</p>
+
+            <div style="background:var(--cream); border-radius:12px; padding:20px; margin-bottom:24px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="color:var(--text-light); font-size:0.82rem;">Amount to Prepare</span>
+                    <strong style="color:var(--rose-dark);">&#8369;{{ payment.amount }}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="color:var(--text-light); font-size:0.82rem;">Order #</span>
+                    <strong>#{{ order.orderID }}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-light); font-size:0.82rem;">Pickup Date</span>
+                    <strong>{{ order.pickupdate }}</strong>
+                </div>
+            </div>
+            {% endif %}
+
+            <div style="display:flex; gap:12px; justify-content:center;">
+                <a href="{% url 'customer_order_detail' order.pk %}" class="btn btn-primary">View Order</a>
+                <a href="{% url 'customer_dashboard' %}" class="btn btn-outline">My Orders</a>
+            </div>
+        </div>
+    </div>
+
+    <p style="margin-top:16px; font-size:0.85rem; color:var(--text-light);">
+        Thank you for ordering from Cherry Michelle's Cakes & Pastries!
+    </p>
+</div>
+{% endblock %}

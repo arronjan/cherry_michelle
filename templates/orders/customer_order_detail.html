@@ -119,9 +119,10 @@
   </div>
 </div>
 
-<div style="text-align: center; margin-top: 8px">
-  <a href="{% url 'customer_place_order' %}" class="btn btn-primary"
-    >Place Another Order</a
-  >
+<div style="text-align:center; margin-top:8px; display:flex; gap:12px; justify-content:center;">
+    {% if payment.paymentstatus == 'pending' or not payment %}
+    <a href="{% url 'payment_simulation' order.pk %}" class="btn btn-gold">Pay Now</a>
+    {% endif %}
+    <a href="{% url 'customer_place_order' %}" class="btn btn-primary">Place Another Order</a>
 </div>
 {% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'orders/customer_base.html' %}
+{% block title %}GCash Payment – Cherry Michelle's{% endblock %}
+{% block content %}
+<div style="max-width:400px; margin:0 auto;">
+
+    <!-- GCash styled card -->
+    <div style="background:#0070e0; border-radius:20px; padding:28px 24px; color:#fff; margin-bottom:20px; box-shadow:0 8px 24px rgba(0,112,224,0.35);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+            <div style="font-size:2rem;">💙</div>
+            <div>
+                <div style="font-size:1.3rem; font-weight:800; letter-spacing:1px;">GCash</div>
+                <div style="font-size:0.78rem; opacity:0.75;">Simulated Payment</div>
+            </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:16px; margin-bottom:16px;">
+            <div style="font-size:0.78rem; opacity:0.8; margin-bottom:4px;">Amount to Pay</div>
+            <div style="font-size:2rem; font-weight:800;">&#8369;{{ order.totalprice }}</div>
+        </div>
+        <div style="font-size:0.82rem; opacity:0.8;">
+            Order #{{ order.orderID }} — Cherry Michelle's Cakes & Pastries
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-error">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>GCash Mobile Number</label>
+                    <input type="text" name="gcash_number" class="form-control" placeholder="09XXXXXXXXX" maxlength="11" style="font-size:1.1rem; letter-spacing:2px;">
+                    <small style="color:var(--text-light); font-size:0.78rem;">Enter your 11-digit GCash number</small>
+                </div>
+                <div style="background:#e8f4fd; border-radius:10px; padding:12px; margin-bottom:16px; font-size:0.82rem; color:#0070e0;">
+                    This is a simulation. No real money will be transferred.
+                </div>
+                <button type="submit" style="width:100%; padding:14px; background:#0070e0; color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:800; cursor:pointer; letter-spacing:0.5px; font-family:'Lato',sans-serif;">
+                    Pay &#8369;{{ order.totalprice }}
+                </button>
+            </form>
+
+            <div style="text-align:center; margin-top:12px;">
+                <a href="{% url 'payment_simulation' order.pk %}" style="color:var(--text-light); font-size:0.85rem;">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

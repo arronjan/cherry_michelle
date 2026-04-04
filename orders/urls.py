@@ -63,4 +63,10 @@ urlpatterns = [
     path('production/add/', views.production_add, name='production_add'),
     path('production/<int:pk>/edit/', views.production_edit, name='production_edit'),
     path('production/<int:pk>/delete/', views.production_delete, name='production_delete'),
+
+    # Payment Simulation
+    path('customer/order/<int:pk>/pay/', views.payment_simulation, name='payment_simulation'),
+    path('customer/order/<int:pk>/pay/gcash/', views.gcash_simulation, name='gcash_simulation'),
+    path('customer/order/<int:pk>/pay/cash/', views.cash_simulation, name='cash_simulation'),
+    path('customer/order/<int:pk>/pay/success/', views.payment_success, name='payment_success'),
 ]

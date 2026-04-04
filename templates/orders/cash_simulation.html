@@ -1,0 +1,51 @@
+{% extends 'orders/customer_base.html' %}
+{% block title %}Cash Payment – Cherry Michelle's{% endblock %}
+{% block content %}
+<div style="max-width:400px; margin:0 auto;">
+
+    <!-- Cash styled card -->
+    <div style="background:linear-gradient(135deg, var(--rose), var(--rose-dark)); border-radius:20px; padding:28px 24px; color:#fff; margin-bottom:20px; box-shadow:0 8px 24px rgba(200,83,106,0.35);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+            <div style="font-size:2rem;">💵</div>
+            <div>
+                <div style="font-size:1.3rem; font-weight:800; letter-spacing:1px;">Cash Payment</div>
+                <div style="font-size:0.78rem; opacity:0.75;">Pay upon pickup</div>
+            </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:16px; margin-bottom:16px;">
+            <div style="font-size:0.78rem; opacity:0.8; margin-bottom:4px;">Amount to Prepare</div>
+            <div style="font-size:2rem; font-weight:800;">&#8369;{{ order.totalprice }}</div>
+        </div>
+        <div style="font-size:0.82rem; opacity:0.8;">
+            Order #{{ order.orderID }} — Cherry Michelle's Cakes & Pastries
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div style="text-align:center; padding:16px 0;">
+                <div style="font-size:3rem; margin-bottom:12px;">🏪</div>
+                <div style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--rose-dark); margin-bottom:8px;">Pay at Pickup</div>
+                <p style="color:var(--text-light); font-size:0.88rem; line-height:1.7; margin-bottom:20px;">
+                    Please prepare exact amount of <strong style="color:var(--rose-dark);">&#8369;{{ order.totalprice }}</strong> when you pick up your order on <strong>{{ order.pickupdate }}</strong>.
+                </p>
+                <div style="background:var(--cream); border-radius:10px; padding:14px; margin-bottom:20px; font-size:0.85rem; color:var(--text-light); text-align:left;">
+                    <div style="margin-bottom:6px;">📍 <strong>Pickup Location:</strong> Cherry Michelle's Cakes & Pastries</div>
+                    <div>📅 <strong>Pickup Date:</strong> {{ order.pickupdate }}</div>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; font-size:1rem;">
+                    Confirm Cash Payment
+                </button>
+            </form>
+
+            <div style="text-align:center; margin-top:12px;">
+                <a href="{% url 'payment_simulation' order.pk %}" style="color:var(--text-light); font-size:0.85rem;">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
