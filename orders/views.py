@@ -450,6 +450,8 @@ def user_list(request):
     if not request.user.is_superuser:
         messages.error(request, 'Only managers can access this.')
         return redirect('dashboard')
+    users = AuthUser.objects.all().order_by('username')
+    return render(request, 'orders/user_list.html', {'users': users})
 
 
 @login_required
@@ -457,6 +459,24 @@ def user_add(request):
     if not request.user.is_superuser:
         messages.error(request, 'Only managers can access this.')
         return redirect('dashboard')
+    from .forms import StaffCreationForm
+    form = StaffCreationForm(request.POST or None)
+    if form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        if AuthUser.objects.filter(username=username).exists():
+            form.add_error('username', 'Username already exists.')
+        else:
+            user = AuthUser.objects.create_user(username=username, password=password)
+            user.is_superuser = form.cleaned_data.get('is_manager', False)
+            user.is_staff = form.cleaned_data.get('is_manager', False)
+            user.save()
+            staff = form.save(commit=False)
+            staff.user = user
+            staff.save()
+            messages.success(request, f'User {username} created!')
+            return redirect('user_list')
+    return render(request, 'orders/user_add.html', {'form': form})
 
 
 @login_required
@@ -464,6 +484,19 @@ def user_edit(request, pk):
     if not request.user.is_superuser:
         messages.error(request, 'Only managers can access this.')
         return redirect('dashboard')
+    user = get_object_or_404(AuthUser, pk=pk)
+    if request.method == 'POST':
+        new_password = request.POST.get('password')
+        is_superuser = request.POST.get('is_superuser') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+        if new_password:
+            user.set_password(new_password)
+        user.is_superuser = is_superuser
+        user.is_active = is_active
+        user.save()
+        messages.success(request, f'User {user.username} updated!')
+        return redirect('user_list')
+    return render(request, 'orders/user_edit.html', {'edited_user': user})
 
 
 @login_required
@@ -471,18 +504,28 @@ def user_delete(request, pk):
     if not request.user.is_superuser:
         messages.error(request, 'Only managers can access this.')
         return redirect('dashboard')
+    user = get_object_or_404(AuthUser, pk=pk)
+    if request.user == user:
+        messages.error(request, 'You cannot delete your own account.')
+        return redirect('user_list')
+    if request.method == 'POST':
+        username = user.username
+        user.delete()
+        messages.success(request, f'User {username} deleted.')
+        return redirect('user_list')
+    return render(request, 'orders/confirm_delete.html', {'object': user, 'back_url': 'user_list'})
 
 
 # --- REPORTS ---
 @login_required
 def reports(request):
-
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can view reports.')
+        return redirect('dashboard')
     from django.db.models import Sum
-    from datetime import date, timedelta
-
+    from datetime import date
     today = date.today()
     this_month_start = today.replace(day=1)
-
     stats = {
         'total_revenue': Payment.objects.filter(paymentstatus='paid').aggregate(Sum('amount'))['amount__sum'] or 0,
         'month_revenue': Payment.objects.filter(paymentstatus='paid', paymentdate__gte=this_month_start).aggregate(Sum('amount'))['amount__sum'] or 0,
@@ -496,11 +539,9 @@ def reports(request):
         'cash_payments': Payment.objects.filter(paymentmethod='cash', paymentstatus='paid').aggregate(Sum('amount'))['amount__sum'] or 0,
         'gcash_payments': Payment.objects.filter(paymentmethod='gcash', paymentstatus='paid').aggregate(Sum('amount'))['amount__sum'] or 0,
     }
-
     top_cakes = Cake.objects.annotate(order_count=Count('orders')).order_by('-order_count')[:5]
     recent_payments = Payment.objects.select_related('orderID__customerID').order_by('-paymentdate')[:10]
     orders_by_status = Order.objects.values('orderstatus').annotate(count=Count('orderstatus'))
-
     return render(request, 'orders/reports.html', {
         'stats': stats,
         'top_cakes': top_cakes,
