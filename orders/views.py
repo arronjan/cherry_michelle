@@ -444,81 +444,38 @@ def staff_add_v2(request):
             return redirect('staff_list')
     return render(request, 'orders/staff_add.html', {'form': form, 'title': 'Add Staff Account'})
 
-def superuser_required(view_func):
-    def wrapper(request, *args, **kwargs):
-        if not request.user.is_authenticated or not request.user.is_superuser:
-            messages.error(request, 'Only managers can access this page.')
-            return redirect('dashboard')
-        return view_func(request, *args, **kwargs)
-    return wrapper
-
-
 # --- USER MANAGEMENT ---
-@superuser_required
+@login_required
 def user_list(request):
-    users = AuthUser.objects.all().order_by('username')
-    return render(request, 'orders/user_list.html', {'users': users})
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can access this.')
+        return redirect('dashboard')
 
 
-@superuser_required
+@login_required
 def user_add(request):
-    from .forms import StaffCreationForm
-    form = StaffCreationForm(request.POST or None)
-    if form.is_valid():
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        if AuthUser.objects.filter(username=username).exists():
-            form.add_error('username', 'Username already exists.')
-        else:
-            user = AuthUser.objects.create_user(username=username, password=password)
-            user.is_superuser = form.cleaned_data.get('is_manager', False)
-            user.is_staff = form.cleaned_data.get('is_manager', False)
-            user.save()
-            staff = form.save(commit=False)
-            staff.user = user
-            staff.save()
-            messages.success(request, f'User {username} created!')
-            return redirect('user_list')
-    return render(request, 'orders/user_add.html', {'form': form})
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can access this.')
+        return redirect('dashboard')
 
 
-@superuser_required
+@login_required
 def user_edit(request, pk):
-    user = get_object_or_404(AuthUser, pk=pk)
-    if request.method == 'POST':
-        new_password = request.POST.get('password')
-        is_superuser = request.POST.get('is_superuser') == 'on'
-        is_active = request.POST.get('is_active') == 'on'
-        if new_password:
-            user.set_password(new_password)
-        user.is_superuser = is_superuser
-        user.is_active = is_active
-        user.save()
-        messages.success(request, f'User {user.username} updated!')
-        return redirect('user_list')
-    return render(request, 'orders/user_edit.html', {'edited_user': user})
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can access this.')
+        return redirect('dashboard')
 
 
-@superuser_required
+@login_required
 def user_delete(request, pk):
-    user = get_object_or_404(AuthUser, pk=pk)
-    if request.user == user:
-        messages.error(request, 'You cannot delete your own account.')
-        return redirect('user_list')
-    if request.method == 'POST':
-        username = user.username
-        user.delete()
-        messages.success(request, f'User {username} deleted.')
-        return redirect('user_list')
-    return render(request, 'orders/confirm_delete.html', {'object': user, 'back_url': 'user_list'})
+    if not request.user.is_superuser:
+        messages.error(request, 'Only managers can access this.')
+        return redirect('dashboard')
 
 
 # --- REPORTS ---
 @login_required
 def reports(request):
-    if not request.user.is_superuser:
-        messages.error(request, 'Only managers can view reports.')
-        return redirect('dashboard')
 
     from django.db.models import Sum
     from datetime import date, timedelta
