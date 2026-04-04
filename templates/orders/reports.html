@@ -1,0 +1,102 @@
+{% extends 'orders/base.html' %}
+{% block title %}Reports – Cakery{% endblock %}
+{% block topbar_title %}Reports & Analytics{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title">Reports & Analytics</div>
+    <span style="color:var(--text-light); font-size:0.85rem;">Manager view only</span>
+</div>
+<div class="stats-grid" style="margin-bottom:24px;">
+    <div class="stat-card gold"><div class="stat-num" style="font-size:1.4rem;">&#8369;{{ stats.total_revenue|floatformat:0 }}</div><div class="stat-label">Total Revenue</div></div>
+    <div class="stat-card gold"><div class="stat-num" style="font-size:1.4rem;">&#8369;{{ stats.month_revenue|floatformat:0 }}</div><div class="stat-label">This Month</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.total_orders }}</div><div class="stat-label">Total Orders</div></div>
+    <div class="stat-card green"><div class="stat-num">{{ stats.completed_orders }}</div><div class="stat-label">Completed</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.pending_orders }}</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card brown"><div class="stat-num">{{ stats.cancelled_orders }}</div><div class="stat-label">Cancelled</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.total_customers }}</div><div class="stat-label">Customers</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.total_staff }}</div><div class="stat-label">Active Staff</div></div>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+    <div class="card">
+        <div class="card-header"><span class="card-title">Payment Methods</span></div>
+        <div class="card-body">
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span style="font-weight:600;">Cash</span>
+                    <strong style="color:var(--rose-dark);">&#8369;{{ stats.cash_payments|floatformat:0 }}</strong>
+                </div>
+                <div style="background:var(--cream-dark); border-radius:20px; height:10px; overflow:hidden;">
+                    {% if stats.total_revenue %}
+                    <div style="background:var(--rose); height:100%; width:{% widthratio stats.cash_payments stats.total_revenue 100 %}%; border-radius:20px;"></div>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span style="font-weight:600;">GCash</span>
+                    <strong style="color:var(--rose-dark);">&#8369;{{ stats.gcash_payments|floatformat:0 }}</strong>
+                </div>
+                <div style="background:var(--cream-dark); border-radius:20px; height:10px; overflow:hidden;">
+                    {% if stats.total_revenue %}
+                    <div style="background:var(--gold); height:100%; width:{% widthratio stats.gcash_payments stats.total_revenue 100 %}%; border-radius:20px;"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><span class="card-title">Orders by Status</span></div>
+        <div class="card-body">
+            {% for item in orders_by_status %}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span class="badge badge-{{ item.orderstatus }}">{{ item.orderstatus|title }}</span>
+                <strong>{{ item.count }}</strong>
+            </div>
+            {% empty %}
+            <p style="color:var(--text-light);">No orders yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+    <div class="card">
+        <div class="card-header"><span class="card-title">Top Ordered Cakes</span></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Cake</th><th>Flavor</th><th>Orders</th></tr></thead>
+                <tbody>
+                {% for cake in top_cakes %}
+                <tr>
+                    <td>{{ cake.get_caketype_display }}</td>
+                    <td>{{ cake.get_flavor_display }}</td>
+                    <td><span class="badge badge-rose">{{ cake.order_count }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" style="text-align:center; color:var(--text-light); padding:20px;">No data yet</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><span class="card-title">Recent Payments</span></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Customer</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+                <tbody>
+                {% for payment in recent_payments %}
+                <tr>
+                    <td>{{ payment.orderID.customerID.name }}</td>
+                    <td>&#8369;{{ payment.amount }}</td>
+                    <td>{{ payment.get_paymentmethod_display }}</td>
+                    <td><span class="badge badge-{{ payment.paymentstatus }}">{{ payment.get_paymentstatus_display }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" style="text-align:center; color:var(--text-light); padding:20px;">No payments yet</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
