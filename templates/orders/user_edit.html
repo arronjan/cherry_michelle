@@ -1,0 +1,44 @@
+{% extends 'orders/base.html' %}
+{% block title %}Edit User – Cakery{% endblock %}
+{% block topbar_title %}Edit User{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title">Edit User — {{ edited_user.username }}</div>
+    <a href="{% url 'user_list' %}" class="btn btn-outline">Back</a>
+</div>
+<div class="card" style="max-width:600px;">
+    <div class="card-header"><span class="card-title">Edit Account</span></div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" value="{{ edited_user.username }}" disabled>
+                <small style="color:var(--text-light); font-size:0.78rem;">Username cannot be changed.</small>
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
+            </div>
+            <div class="form-group">
+                <div style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+                    <input type="checkbox" name="is_superuser" id="is_superuser" class="form-check-input" {% if edited_user.is_superuser %}checked{% endif %}>
+                    <label for="is_superuser" style="margin:0; font-weight:600;">Manager/Admin access</label>
+                </div>
+                <small style="color:var(--text-light); font-size:0.78rem;">Managers can access all features including user management and reports.</small>
+            </div>
+            <div class="form-group">
+                <div style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+                    <input type="checkbox" name="is_active" id="is_active" class="form-check-input" {% if edited_user.is_active %}checked{% endif %}>
+                    <label for="is_active" style="margin:0; font-weight:600;">Account Active</label>
+                </div>
+                <small style="color:var(--text-light); font-size:0.78rem;">Inactive users cannot log in.</small>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:16px;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'user_list' %}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

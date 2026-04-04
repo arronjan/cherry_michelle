@@ -3,11 +3,20 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    # Auth (staff)
+    # Public
     path('', views.home, name='home'),
     path('login/', auth_views.LoginView.as_view(template_name='orders/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    # Staff/Admin
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('reports/', views.reports, name='reports'),
+
+    # User Management (admin only)
+    path('users/', views.user_list, name='user_list'),
+    path('users/add/', views.user_add, name='user_add'),
+    path('users/<int:pk>/edit/', views.user_edit, name='user_edit'),
+    path('users/<int:pk>/delete/', views.user_delete, name='user_delete'),
 
     # Customer Auth
     path('register/', views.customer_register, name='customer_register'),

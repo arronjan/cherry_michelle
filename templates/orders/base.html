@@ -495,6 +495,12 @@
                 <span class="nav-icon">🏠</span> Dashboard
             </a>
 
+            {% if request.user.is_superuser %}
+            <a href="{% url 'reports' %}" class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                <span class="nav-icon">📊</span> Reports
+            </a>
+            {% endif %}
+
             <div class="nav-section">Orders</div>
             <a href="{% url 'order_list' %}" class="nav-link {% if 'order' in request.resolver_match.url_name %}active{% endif %}">
                 <span class="nav-icon">📋</span> All Orders
@@ -525,11 +531,11 @@
             </a>
 
             {% if request.user.is_superuser %}
-            <div class="nav-section">System</div>
-            <a href="/admin/" class="nav-link">
-                <span class="nav-icon">⚙️</span> Django Admin
+            <div class="nav-section">Admin</div>
+            <a href="{% url 'user_list' %}" class="nav-link {% if 'user' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="nav-icon">👤</span> Manage Users
             </a>
-{% endif %}
+            {% endif %}
         </nav>
 
         <div class="sidebar-footer">

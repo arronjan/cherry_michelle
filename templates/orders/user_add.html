@@ -1,0 +1,31 @@
+{% extends 'orders/base.html' %}
+{% block title %}Add User – Cakery{% endblock %}
+{% block topbar_title %}Add User{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-header-title">Add User</div>
+    <a href="{% url 'user_list' %}" class="btn btn-outline">Back</a>
+</div>
+<div class="card" style="max-width:600px;">
+    <div class="card-header"><span class="card-title">New User Account</span></div>
+    <div class="card-body">
+        <div style="background:var(--cream); border-radius:10px; padding:14px; margin-bottom:20px; font-size:0.85rem; color:var(--text-light);">
+            This will create a staff profile and login account at the same time.
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div style="color:#842029; font-size:0.8rem; margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+            {% endfor %}
+            <div style="display:flex; gap:12px; margin-top:8px;">
+                <button type="submit" class="btn btn-primary">Create User</button>
+                <a href="{% url 'user_list' %}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
