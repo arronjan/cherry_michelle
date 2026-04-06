@@ -20,8 +20,8 @@
                     <td><strong>₱{{ cake.baseprice }}</strong></td>
                     <td>{% if cake.is_available %}<span class="badge badge-ready">✓ Yes</span>{% else %}<span class="badge badge-cancelled">✗ No</span>{% endif %}</td>
                     <td>
-                        <a href="{% url 'cake_edit' cake.pk %}" class="btn-icon">✏️</a>
-                        <a href="{% url 'cake_delete' cake.pk %}" class="btn-icon">🗑️</a>
+                        <a href="{% url 'cake_edit' cake.pk %}" class="btn-icon">Edit</a>
+                        <a href="{% url 'cake_delete' cake.pk %}" class="btn-icon">Delete</a>
                     </td>
                 </tr>
                 {% empty %}

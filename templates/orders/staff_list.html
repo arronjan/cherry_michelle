@@ -1,11 +1,11 @@
 {% extends 'orders/base.html' %}
 {% block title %}Staff – Cakery{% endblock %}
-{% block topbar_title %}👨‍🍳 Staff{% endblock %}
+{% block topbar_title %}Staff{% endblock %}
 {% block content %}
 <div class="page-header">
-    <div class="page-header-title"><span>👨‍🍳</span> Staff</div>
+    <div class="page-header-title"><span></span> Staff</div>
     {% if request.user.is_superuser %}
-    <a href="{% url 'staff_add' %}" class="btn btn-primary">➕ Add Staff</a>
+    <a href="{% url 'staff_add' %}" class="btn btn-primary">Add Staff</a>
     {% endif %}
 </div>
 <div class="card">
@@ -22,8 +22,8 @@
                     <td>{% if s.is_active %}<span class="badge badge-ready">Active</span>{% else %}<span class="badge badge-cancelled">Inactive</span>{% endif %}</td>
                     <td>{{ s.tasks.count }}</td>
                     <td>
-                        <a href="{% url 'staff_edit' s.pk %}" class="btn-icon">✏️</a>
-                        {% if request.user.is_superuser %}<a href="{% url 'staff_delete' s.pk %}" class="btn-icon">🗑️</a>{% endif %}
+                        <a href="{% url 'staff_edit' s.pk %}" class="btn-icon">Edit</a>
+                        {% if request.user.is_superuser %}<a href="{% url 'staff_delete' s.pk %}" class="btn-icon">Delete</a>{% endif %}
                     </td>
                 </tr>
                 {% empty %}

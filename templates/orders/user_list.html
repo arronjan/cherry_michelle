@@ -48,9 +48,9 @@
                 </td>
                 <td style="font-size:0.82rem;">{{ user.date_joined|date:"M d, Y" }}</td>
                 <td>
-                    <a href="{% url 'user_edit' user.pk %}" class="btn-icon" title="Edit">✏️</a>
+                    <a href="{% url 'user_edit' user.pk %}" class="btn-icon" title="Edit">Edit</a>
                     {% if not user == request.user %}
-                    <a href="{% url 'user_delete' user.pk %}" class="btn-icon" title="Delete">🗑️</a>
+                    <a href="{% url 'user_delete' user.pk %}" class="btn-icon" title="Delete">Delete</a>
                     {% endif %}
                 </td>
             </tr>
