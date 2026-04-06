@@ -1,10 +1,11 @@
-from urllib import request
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from datetime import date, timedelta
 from .models import Customer, Cake, Order, OrderItem, Payment, Staff, ProductionTask
 from .forms import CustomerForm, CakeForm, OrderForm, OrderItemForm, PaymentForm, StaffForm, ProductionTaskForm
@@ -12,6 +13,10 @@ from django.contrib.auth.models import User as AuthUser
 from .forms import StaffCreationForm
 import random
 import string
+import json
+import urllib.request as urllib_request
+import urllib.parse
+import base64
 
 @login_required
 def dashboard(request):
@@ -538,6 +543,7 @@ def reports(request):
         'total_cakes': Cake.objects.filter(is_available=True).count(),
         'cash_payments': Payment.objects.filter(paymentmethod='cash', paymentstatus='paid').aggregate(Sum('amount'))['amount__sum'] or 0,
         'gcash_payments': Payment.objects.filter(paymentmethod='gcash', paymentstatus='paid').aggregate(Sum('amount'))['amount__sum'] or 0,
+        'paypal_payments': Payment.objects.filter(paymentmethod='paypal', paymentstatus='paid').aggregate(Sum('amount'))['amount__sum'] or 0,
     }
     top_cakes = Cake.objects.annotate(order_count=Count('orders')).order_by('-order_count')[:5]
     recent_payments = Payment.objects.select_related('orderID__customerID').order_by('-paymentdate')[:10]
@@ -566,37 +572,89 @@ def payment_simulation(request, pk):
 
 
 @login_required
-def gcash_simulation(request, pk):
+def paypal_simulation(request, pk):
     if not hasattr(request.user, 'customer_account'):
         return redirect('customer_login')
     customer = request.user.customer_account.customer
     order = get_object_or_404(Order, pk=pk, customerID=customer)
     payment = order.payments.first()
+    return render(request, 'orders/paypal_simulation.html', {
+        'order': order,
+        'payment': payment,
+        'PAYPAL_CLIENT_ID': settings.PAYPAL_CLIENT_ID,
+    })
 
-    if request.method == 'POST':
-        gcash_number = request.POST.get('gcash_number')
-        if gcash_number and len(gcash_number) == 11:
+
+@csrf_exempt
+@login_required
+def paypal_capture(request, pk):
+    """Called via AJAX from the PayPal JS SDK after buyer approves payment."""
+    if not hasattr(request.user, 'customer_account'):
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    customer = request.user.customer_account.customer
+    order = get_object_or_404(Order, pk=pk, customerID=customer)
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    try:
+        body = json.loads(request.body)
+        paypal_order_id = body.get('orderID')
+        if not paypal_order_id:
+            return JsonResponse({'error': 'Missing orderID'}, status=400)
+
+        # Get PayPal access token
+        credentials = f"{settings.PAYPAL_CLIENT_ID}:{settings.PAYPAL_CLIENT_SECRET}"
+        encoded = base64.b64encode(credentials.encode()).decode()
+        base_url = "https://api-m.sandbox.paypal.com"
+
+        token_req = urllib_request.Request(
+            f"{base_url}/v1/oauth2/token",
+            data=b"grant_type=client_credentials",
+            headers={
+                "Authorization": f"Basic {encoded}",
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
+        with urllib_request.urlopen(token_req) as resp:
+            token_data = json.loads(resp.read())
+        access_token = token_data["access_token"]
+
+        # Capture the PayPal order
+        capture_req = urllib_request.Request(
+            f"{base_url}/v2/checkout/orders/{paypal_order_id}/capture",
+            data=b"{}",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Content-Type": "application/json",
+            },
+        )
+        capture_req.get_method = lambda: "POST"
+        with urllib_request.urlopen(capture_req) as resp:
+            capture_data = json.loads(resp.read())
+
+        if capture_data.get("status") == "COMPLETED":
+            capture_id = capture_data["purchase_units"][0]["payments"]["captures"][0]["id"]
+            payment = order.payments.first()
             if payment:
                 payment.paymentstatus = 'paid'
-                payment.paymentmethod = 'gcash'
-                payment.reference_number = generate_reference()
+                payment.paymentmethod = 'paypal'
+                payment.reference_number = capture_id
                 payment.save()
             else:
                 Payment.objects.create(
                     orderID=order,
-                    paymentmethod='gcash',
+                    paymentmethod='paypal',
                     paymentstatus='paid',
                     amount=order.totalprice,
-                    reference_number=generate_reference(),
+                    reference_number=capture_id,
                 )
-            return redirect('payment_success', pk=pk)
+            return JsonResponse({'status': 'success', 'capture_id': capture_id})
         else:
-            messages.error(request, 'Please enter a valid 11-digit GCash number.')
+            return JsonResponse({'error': 'Payment not completed', 'details': capture_data}, status=400)
 
-    return render(request, 'orders/gcash_simulation.html', {
-        'order': order,
-        'payment': payment,
-    })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required

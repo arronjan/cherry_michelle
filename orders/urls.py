@@ -66,7 +66,8 @@ urlpatterns = [
 
     # Payment Simulation
     path('customer/order/<int:pk>/pay/', views.payment_simulation, name='payment_simulation'),
-    path('customer/order/<int:pk>/pay/gcash/', views.gcash_simulation, name='gcash_simulation'),
+    path('customer/order/<int:pk>/pay/paypal/', views.paypal_simulation, name='paypal_simulation'),
+    path('customer/order/<int:pk>/pay/paypal/capture/', views.paypal_capture, name='paypal_capture'),
     path('customer/order/<int:pk>/pay/cash/', views.cash_simulation, name='cash_simulation'),
     path('customer/order/<int:pk>/pay/success/', views.payment_success, name='payment_success'),
 ]

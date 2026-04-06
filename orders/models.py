@@ -114,6 +114,7 @@ class Payment(models.Model):
     METHOD_CHOICES = [
         ('cash', 'Cash'),
         ('gcash', 'GCash'),
+        ('paypal', 'PayPal'),
         ('bank_transfer', 'Bank Transfer'),
         ('card', 'Credit/Debit Card'),
     ]

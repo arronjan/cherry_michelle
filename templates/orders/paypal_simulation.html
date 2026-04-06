@@ -1,0 +1,112 @@
+{% extends 'orders/customer_base.html' %}
+{% block title %}PayPal Payment – Cherry Michelle's{% endblock %}
+{% block content %}
+<div style="max-width:400px; margin:0 auto;">
+
+    <!-- PayPal styled card -->
+    <div style="background:#003087; border-radius:20px; padding:28px 24px; color:#fff; margin-bottom:20px; box-shadow:0 8px 24px rgba(0,48,135,0.35);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+            <div style="font-size:2rem;">🅿️</div>
+            <div>
+                <div style="font-size:1.3rem; font-weight:800; letter-spacing:1px;">PayPal</div>
+                <div style="font-size:0.78rem; opacity:0.75;">Sandbox Payment</div>
+            </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:16px; margin-bottom:16px;">
+            <div style="font-size:0.78rem; opacity:0.8; margin-bottom:4px;">Amount to Pay</div>
+            <div style="font-size:2rem; font-weight:800;">&#8369;{{ order.totalprice }}</div>
+        </div>
+        <div style="font-size:0.82rem; opacity:0.8;">
+            Order #{{ order.orderID }} — Cherry Michelle's Cakes & Pastries
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div id="paypal-button-container"></div>
+
+            <div id="paypal-status" style="display:none; margin-top:16px; padding:14px; border-radius:10px; text-align:center; font-weight:600;"></div>
+
+            <div style="text-align:center; margin-top:16px;">
+                <a href="{% url 'payment_simulation' order.pk %}" style="color:var(--text-light); font-size:0.85rem;">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PayPal Sandbox SDK -->
+<script src="https://www.sandbox.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
+<script>
+    const captureUrl = "{% url 'paypal_capture' order.pk %}";
+    const successUrl = "{% url 'payment_success' order.pk %}";
+    const csrfToken = "{{ csrf_token }}";
+    const orderAmount = "{{ order.totalprice }}";
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    description: "Order #{{ order.orderID }} - Cherry Michelle's Cakes & Pastries",
+                    amount: {
+                        currency_code: "PHP",
+                        value: parseFloat(orderAmount).toFixed(2)
+                    }
+                }]
+            });
+        },
+
+        onApprove: function(data, actions) {
+            const statusEl = document.getElementById('paypal-status');
+            statusEl.style.display = 'block';
+            statusEl.style.background = '#e8f4fd';
+            statusEl.style.color = '#003087';
+            statusEl.textContent = 'Processing payment…';
+
+            return fetch(captureUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ orderID: data.orderID })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    statusEl.style.background = '#d4edda';
+                    statusEl.style.color = '#155724';
+                    statusEl.textContent = '✅ Payment successful! Redirecting…';
+                    setTimeout(() => { window.location.href = successUrl; }, 1200);
+                } else {
+                    statusEl.style.background = '#f8d7da';
+                    statusEl.style.color = '#721c24';
+                    statusEl.textContent = '❌ Payment failed: ' + (result.error || 'Unknown error');
+                }
+            })
+            .catch(err => {
+                statusEl.style.background = '#f8d7da';
+                statusEl.style.color = '#721c24';
+                statusEl.textContent = '❌ Network error. Please try again.';
+            });
+        },
+
+        onError: function(err) {
+            const statusEl = document.getElementById('paypal-status');
+            statusEl.style.display = 'block';
+            statusEl.style.background = '#f8d7da';
+            statusEl.style.color = '#721c24';
+            statusEl.textContent = '❌ PayPal error. Please try again.';
+            console.error('PayPal error:', err);
+        },
+
+        onCancel: function(data) {
+            const statusEl = document.getElementById('paypal-status');
+            statusEl.style.display = 'block';
+            statusEl.style.background = '#fff3cd';
+            statusEl.style.color = '#856404';
+            statusEl.textContent = '⚠️ Payment cancelled.';
+        }
+
+    }).render('#paypal-button-container');
+</script>
+{% endblock %}

@@ -62,6 +62,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# PayPal Sandbox Settings
+PAYPAL_CLIENT_ID = "AZV9Vh4PKKTH10qgOs6_D3afEKedbrKpcXCeMb6cVoCWyn5M8Ip1eiX7hwPx1v1ZnBiCreJcoC-f0SHf"
+PAYPAL_CLIENT_SECRET = "ECl_-EwJhOP0YhM2FKoxelVi2O15zwEnRyPuO8BZoMDxxF04ecqq3dijLVZiF5UO1DjqiF52gE3kumau"
+PAYPAL_MODE = "sandbox"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
