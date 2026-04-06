@@ -125,7 +125,7 @@ class CustomerOrderForm(forms.Form):
         widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': datetime.date.today().isoformat()}),
     )
     payment_method = forms.ChoiceField(
-        choices=[('cash', 'Cash'), ('gcash', 'GCash')],
+        choices=[('cash', 'Cash'), ('paypal', 'PayPal')],
         widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
         label='Payment Method'
     )
