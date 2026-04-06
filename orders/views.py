@@ -176,6 +176,7 @@ def order_edit(request, pk):
 def order_delete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     if request.method == 'POST':
+        order.payments.all().delete()  # Delete related payments first
         order.delete()
         messages.success(request, 'Order deleted.')
         return redirect('order_list')
