@@ -1,4 +1,5 @@
 from django import forms
+import datetime
 from .models import Customer, Cake, Order, OrderItem, Payment, Staff, ProductionTask
 
 
@@ -34,7 +35,7 @@ class OrderForm(forms.ModelForm):
         fields = ['customerID', 'pickupdate', 'orderstatus', 'notes']
         widgets = {
             'customerID': forms.Select(attrs={'class': 'form-select'}),
-            'pickupdate': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'pickupdate': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': datetime.date.today().isoformat()}),
             'orderstatus': forms.Select(attrs={'class': 'form-select'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
@@ -120,7 +121,9 @@ class CustomerOrderForm(forms.Form):
         label='Choose Cake'
     )
     quantity = forms.IntegerField(min_value=1, initial=1, widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 1}))
-    pickupdate = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
+    pickupdate = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': datetime.date.today().isoformat()}),
+    )
     payment_method = forms.ChoiceField(
         choices=[('cash', 'Cash'), ('gcash', 'GCash')],
         widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
@@ -131,6 +134,12 @@ class CustomerOrderForm(forms.Form):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Any special design requests? (optional)'}),
         label='Design Notes'
     )
+
+    def clean_pickupdate(self):
+        date = self.cleaned_data.get('pickupdate')
+        if date and date < datetime.date.today():
+            raise forms.ValidationError("Pickup date cannot be in the past.")
+        return date
 
 class StaffCreationForm(forms.ModelForm):
     username = forms.CharField(
