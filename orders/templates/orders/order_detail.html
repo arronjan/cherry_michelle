@@ -106,10 +106,10 @@
                     {% for task in tasks %}
                     <tr>
                         <td>
-                            {% if task.task_type == 'baking' %}🔥
-                            {% elif task.task_type == 'decorating' %}🎨
-                            {% elif task.task_type == 'frosting' %}❄️
-                            {% elif task.task_type == 'packaging' %}📦
+                            {% if task.task_type == 'baking' %}
+                            {% elif task.task_type == 'decorating' %}
+                            {% elif task.task_type == 'frosting' %}
+                            {% elif task.task_type == 'packaging' %}
                             {% else %}✅{% endif %}
                             {{ task.get_task_type_display }}
                         </td>

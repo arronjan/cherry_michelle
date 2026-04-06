@@ -1,11 +1,11 @@
 {% extends 'orders/base.html' %}
 {% block title %}Orders – Cakery{% endblock %}
-{% block topbar_title %}📋 Orders{% endblock %}
+{% block topbar_title %}Orders{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <div class="page-header-title"><span>📋</span> Orders</div>
-    <a href="{% url 'order_add' %}" class="btn btn-primary">➕ New Order</a>
+    <div class="page-header-title"><span></span> Orders</div>
+    <a href="{% url 'order_add' %}" class="btn btn-primary">New Order</a>
 </div>
 
 <div class="card">
@@ -46,15 +46,15 @@
                     <td>₱{{ order.totalprice }}</td>
                     <td><span class="badge badge-{{ order.orderstatus }}">{{ order.get_orderstatus_display }}</span></td>
                     <td>
-                        <a href="{% url 'order_detail' order.pk %}" class="btn-icon" title="View">👁️</a>
-                        <a href="{% url 'order_edit' order.pk %}" class="btn-icon" title="Edit">✏️</a>
-                        <a href="{% url 'order_delete' order.pk %}" class="btn-icon" title="Delete">🗑️</a>
+                        <a href="{% url 'order_detail' order.pk %}" class="btn-icon" title="View">Details</a>
+                        <a href="{% url 'order_edit' order.pk %}" class="btn-icon" title="Edit">Edit</a>
+                        <a href="{% url 'order_delete' order.pk %}" class="btn-icon" title="Delete">Delete</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr><td colspan="7">
                     <div class="empty-state">
-                        <div class="empty-icon">📋</div>
+                        <div class="empty-icon"></div>
                         <p>No orders found.</p>
                         <a href="{% url 'order_add' %}" class="btn btn-primary">Create First Order</a>
                     </div>

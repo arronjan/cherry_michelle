@@ -1,9 +1,9 @@
 {% extends 'orders/base.html' %}
 {% block title %}Customers – Cakery{% endblock %}
-{% block topbar_title %}👥 Customers{% endblock %}
+{% block topbar_title %}Customers{% endblock %}
 {% block content %}
 <div class="page-header">
-    <div class="page-header-title"><span>👥</span> Customers</div>
+    <div class="page-header-title"><span></span> Customers</div>
     <a href="{% url 'customer_add' %}" class="btn btn-primary">➕ Add Customer</a>
 </div>
 <div class="card">
@@ -27,8 +27,8 @@
                     <td>{{ c.email }}</td>
                     <td><span class="badge badge-rose">{{ c.orders.count }}</span></td>
                     <td>
-                        <a href="{% url 'customer_edit' c.pk %}" class="btn-icon">✏️</a>
-                        <a href="{% url 'customer_delete' c.pk %}" class="btn-icon">🗑️</a>
+                        <a href="{% url 'customer_edit' c.pk %}" class="btn-icon">Edit</a>
+                        <a href="{% url 'customer_delete' c.pk %}" class="btn-icon">Delete</a>
                     </td>
                 </tr>
                 {% empty %}

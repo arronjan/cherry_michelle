@@ -6,7 +6,7 @@
     <!-- Cash styled card -->
     <div style="background:linear-gradient(135deg, var(--rose), var(--rose-dark)); border-radius:20px; padding:28px 24px; color:#fff; margin-bottom:20px; box-shadow:0 8px 24px rgba(200,83,106,0.35);">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-            <div style="font-size:2rem;">💵</div>
+            <div style="font-size:2rem;"></div>
             <div>
                 <div style="font-size:1.3rem; font-weight:800; letter-spacing:1px;">Cash Payment</div>
                 <div style="font-size:0.78rem; opacity:0.75;">Pay upon pickup</div>
@@ -24,14 +24,14 @@
     <div class="card">
         <div class="card-body">
             <div style="text-align:center; padding:16px 0;">
-                <div style="font-size:3rem; margin-bottom:12px;">🏪</div>
+                <div style="font-size:3rem; margin-bottom:12px;"></div>
                 <div style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--rose-dark); margin-bottom:8px;">Pay at Pickup</div>
                 <p style="color:var(--text-light); font-size:0.88rem; line-height:1.7; margin-bottom:20px;">
                     Please prepare exact amount of <strong style="color:var(--rose-dark);">&#8369;{{ order.totalprice }}</strong> when you pick up your order on <strong>{{ order.pickupdate }}</strong>.
                 </p>
                 <div style="background:var(--cream); border-radius:10px; padding:14px; margin-bottom:20px; font-size:0.85rem; color:var(--text-light); text-align:left;">
                     <div style="margin-bottom:6px;">📍 <strong>Pickup Location:</strong> Cherry Michelle's Cakes & Pastries</div>
-                    <div>📅 <strong>Pickup Date:</strong> {{ order.pickupdate }}</div>
+                    <div><strong>Pickup Date:</strong> {{ order.pickupdate }}</div>
                 </div>
             </div>
 

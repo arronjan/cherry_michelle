@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Customers — Cherry Michelle's Cakery{% endblock %}
-{% block page_title %}👥 Customers{% endblock %}
+{% block page_title %}Customers{% endblock %}
 
 {% block content %}
 <div class="card" style="margin-bottom:24px;">
@@ -39,7 +39,7 @@
                     <td style="font-size:13px;color:#6B7280;">{{ customer.email }}</td>
                     <td>
                         <span style="background:#FDF2F8;color:#E8509A;padding:3px 10px;border-radius:20px;font-weight:700;font-size:12px;">
-                            🎂 {{ customer.order_count }}
+                            {{ customer.order_count }}
                         </span>
                     </td>
                     <td style="font-size:13px;color:#6B7280;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ customer.address }}</td>
@@ -53,7 +53,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-        <div class="empty-icon">👥</div>
+        <div class="empty-icon"></div>
         <p>No customers found. <a href="/admin/orders/customer/add/" style="color:#E8509A;">Add one?</a></p>
     </div>
     {% endif %}

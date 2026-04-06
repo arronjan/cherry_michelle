@@ -9,7 +9,7 @@
             <div style="font-size:2rem;">🅿️</div>
             <div>
                 <div style="font-size:1.3rem; font-weight:800; letter-spacing:1px;">PayPal</div>
-                <div style="font-size:0.78rem; opacity:0.75;">Sandbox Payment</div>
+                <div style="font-size:0.78rem; opacity:0.75;">Payment</div>
             </div>
         </div>
         <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:16px; margin-bottom:16px;">
@@ -75,18 +75,18 @@
                 if (result.status === 'success') {
                     statusEl.style.background = '#d4edda';
                     statusEl.style.color = '#155724';
-                    statusEl.textContent = '✅ Payment successful! Redirecting…';
+                    statusEl.textContent = 'Payment successful! Redirecting…';
                     setTimeout(() => { window.location.href = successUrl; }, 1200);
                 } else {
                     statusEl.style.background = '#f8d7da';
                     statusEl.style.color = '#721c24';
-                    statusEl.textContent = '❌ Payment failed: ' + (result.error || 'Unknown error');
+                    statusEl.textContent = 'Payment failed: ' + (result.error || 'Unknown error');
                 }
             })
             .catch(err => {
                 statusEl.style.background = '#f8d7da';
                 statusEl.style.color = '#721c24';
-                statusEl.textContent = '❌ Network error. Please try again.';
+                statusEl.textContent = 'Network error. Please try again.';
             });
         },
 
@@ -95,7 +95,7 @@
             statusEl.style.display = 'block';
             statusEl.style.background = '#f8d7da';
             statusEl.style.color = '#721c24';
-            statusEl.textContent = '❌ PayPal error. Please try again.';
+            statusEl.textContent = 'PayPal error. Please try again.';
             console.error('PayPal error:', err);
         },
 
@@ -104,7 +104,7 @@
             statusEl.style.display = 'block';
             statusEl.style.background = '#fff3cd';
             statusEl.style.color = '#856404';
-            statusEl.textContent = '⚠️ Payment cancelled.';
+            statusEl.textContent = 'Payment cancelled.';
         }
 
     }).render('#paypal-button-container');

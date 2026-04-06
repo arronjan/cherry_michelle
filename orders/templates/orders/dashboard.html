@@ -1,28 +1,28 @@
 {% extends 'base.html' %}
 
 {% block title %}Dashboard — Cherry Michelle's Cakery{% endblock %}
-{% block page_title %}🏠 Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
 
 <div class="stats-grid">
     <div class="stat-card pink">
-        <div class="stat-icon">🎂</div>
+        <div class="stat-icon"></div>
         <div class="stat-value">{{ total_orders }}</div>
         <div class="stat-label">Total Orders</div>
     </div>
     <div class="stat-card gold">
-        <div class="stat-icon">⏳</div>
+        <div class="stat-icon"></div>
         <div class="stat-value">{{ pending_orders }}</div>
         <div class="stat-label">Active Orders</div>
     </div>
     <div class="stat-card green">
-        <div class="stat-icon">🛍️</div>
+        <div class="stat-icon"></div>
         <div class="stat-value">{{ today_pickups }}</div>
         <div class="stat-label">Pickups Today</div>
     </div>
     <div class="stat-card blue">
-        <div class="stat-icon">💰</div>
+        <div class="stat-icon"></div>
         <div class="stat-value">₱{{ total_revenue|floatformat:0 }}</div>
         <div class="stat-label">Total Revenue</div>
     </div>
@@ -31,7 +31,7 @@
 <div class="grid-2" style="margin-bottom:24px;">
     <!-- Recent Orders -->
     <div class="card">
-        <div class="card-title">📋 Recent Orders</div>
+        <div class="card-title">Recent Orders</div>
         {% if recent_orders %}
         <div class="table-wrapper">
             <table>
@@ -62,7 +62,7 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">🎂</div>
+            <div class="empty-icon"></div>
             <p>No orders yet. They'll appear here when customers start ordering!</p>
         </div>
         {% endif %}
@@ -70,7 +70,7 @@
 
     <!-- Upcoming Pickups -->
     <div class="card">
-        <div class="card-title">🛍️ Upcoming Pickups (7 days)</div>
+        <div class="card-title">Upcoming Pickups (7 days)</div>
         {% if upcoming_pickups %}
         <div class="table-wrapper">
             <table>
@@ -102,7 +102,7 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">📅</div>
+            <div class="empty-icon"></div>
             <p>No upcoming pickups in the next 7 days.</p>
         </div>
         {% endif %}
@@ -111,7 +111,7 @@
 
 <!-- Today's Production Tasks -->
 <div class="card">
-    <div class="card-title">⏰ Today's Production Tasks
+    <div class="card-title">Today's Production Tasks
         <span style="font-size:13px;font-weight:400;color:#6B7280;margin-left:8px;">{{ today|date:"F d, Y" }}</span>
     </div>
     {% if todays_tasks %}
@@ -131,10 +131,10 @@
                 {% for task in todays_tasks %}
                 <tr>
                     <td>
-                        {% if task.task_type == 'baking' %}🔥
-                        {% elif task.task_type == 'frosting' %}❄️
-                        {% elif task.task_type == 'decorating' %}🎨
-                        {% elif task.task_type == 'packaging' %}📦
+                        {% if task.task_type == 'baking' %}
+                        {% elif task.task_type == 'frosting' %}
+                        {% elif task.task_type == 'decorating' %}
+                        {% elif task.task_type == 'packaging' %}
                         {% else %}✅{% endif %}
                         {{ task.get_task_type_display }}
                     </td>

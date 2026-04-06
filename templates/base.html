@@ -399,23 +399,23 @@
         <div class="sidebar-nav">
             <div class="nav-section-label">Main</div>
             <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                <span class="nav-icon">🏠</span> Dashboard
+                <span class="nav-icon"></span> Dashboard
             </a>
             <a href="{% url 'order_list' %}" class="nav-item {% if 'order' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">📋</span> Orders
+                <span class="nav-icon"></span> Orders
             </a>
             <a href="{% url 'customer_list' %}" class="nav-item {% if 'customer' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">👥</span> Customers
+                <span class="nav-icon"></span> Customers
             </a>
 
             <div class="nav-section-label">Production</div>
             <a href="{% url 'production_timeline' %}" class="nav-item {% if request.resolver_match.url_name == 'production_timeline' %}active{% endif %}">
-                <span class="nav-icon">⏰</span> Production Timeline
+                <span class="nav-icon"></span> Production Timeline
             </a>
 
             <div class="nav-section-label">System</div>
             <a href="/admin/" class="nav-item">
-                <span class="nav-icon">⚙️</span> Admin Panel
+                <span class="nav-icon"></span> Admin Panel
             </a>
         </div>
 
@@ -428,7 +428,7 @@
                 </div>
             </div>
             <a href="{% url 'logout' %}" class="btn-logout">
-                🚪 Sign Out
+                Sign Out
             </a>
         </div>
     </nav>

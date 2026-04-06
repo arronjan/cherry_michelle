@@ -484,7 +484,7 @@
 <body>
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <span class="brand-icon">🎂</span>
+            <span class="brand-icon"></span>
             <div class="brand-name">Cherry Michelle's</div>
             <div class="brand-sub">Cakes & Pastries</div>
         </div>
@@ -492,48 +492,48 @@
         <nav class="sidebar-nav">
             <div class="nav-section">Overview</div>
             <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                <span class="nav-icon">🏠</span> Dashboard
+                <span class="nav-icon"></span> Dashboard
             </a>
 
             {% if request.user.is_superuser %}
             <a href="{% url 'reports' %}" class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-                <span class="nav-icon">📊</span> Reports
+                <span class="nav-icon"></span> Reports
             </a>
             {% endif %}
 
             <div class="nav-section">Orders</div>
             <a href="{% url 'order_list' %}" class="nav-link {% if 'order' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">📋</span> All Orders
+                <span class="nav-icon"></span> All Orders
             </a>
             <a href="{% url 'order_add' %}" class="nav-link">
-                <span class="nav-icon">➕</span> New Order
+                <span class="nav-icon"></span> New Order
             </a>
 
             <div class="nav-section">Bakery</div>
             <a href="{% url 'cake_list' %}" class="nav-link {% if 'cake' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">🎂</span> Cake Menu
+                <span class="nav-icon"></span> Cake Menu
             </a>
             <a href="{% url 'production_list' %}" class="nav-link {% if 'production' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">🍳</span> Production
+                <span class="nav-icon"></span> Production
             </a>
 
             <div class="nav-section">People</div>
             <a href="{% url 'customer_list' %}" class="nav-link {% if 'customer' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">👥</span> Customers
+                <span class="nav-icon"></span> Customers
             </a>
             <a href="{% url 'staff_list' %}" class="nav-link {% if 'staff' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">👨‍🍳</span> Staff
+                <span class="nav-icon"></span> Staff
             </a>
 
             <div class="nav-section">Finance</div>
             <a href="{% url 'payment_list' %}" class="nav-link {% if 'payment' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">💳</span> Payments
+                <span class="nav-icon"></span> Payments
             </a>
 
             {% if request.user.is_superuser %}
             <div class="nav-section">Admin</div>
             <a href="{% url 'user_list' %}" class="nav-link {% if 'user' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="nav-icon">👤</span> Manage Users
+                <span class="nav-icon"></span> Manage Users
             </a>
             {% endif %}
         </nav>
@@ -546,7 +546,7 @@
                     <div class="user-role">{% if request.user.is_superuser %}Administrator{% else %}Staff{% endif %}</div>
                 </div>
             </div>
-            <a href="{% url 'logout' %}" class="btn-logout">🚪 Sign Out</a>
+            <a href="{% url 'logout' %}" class="btn-logout">Sign Out</a>
         </div>
     </aside>
 

@@ -3,7 +3,7 @@
 {% block topbar_title %}💳 Payments{% endblock %}
 {% block content %}
 <div class="page-header">
-    <div class="page-header-title"><span>💳</span> Payments</div>
+    <div class="page-header-title"><span></span> Payments</div>
     <a href="{% url 'payment_add' %}" class="btn btn-primary">➕ Record Payment</a>
 </div>
 <div class="card">
@@ -20,12 +20,12 @@
                     <td>{{ p.get_paymentmethod_display }}</td>
                     <td><strong>₱{{ p.amount }}</strong></td>
                     <td><span class="badge badge-{{ p.paymentstatus }}">{{ p.get_paymentstatus_display }}</span></td>
-                    <td><a href="{% url 'payment_edit' p.pk %}" class="btn-icon">✏️</a></td>
+                    <td><a href="{% url 'payment_edit' p.pk %}" class="btn-icon">Edit</a></td>
                 </tr>
                 {% empty %}
                 <tr><td colspan="8">
                     <div class="empty-state">
-                        <div class="empty-icon">💳</div>
+                        <div class="empty-icon"></div>
                         <p>No payments recorded yet.</p>
                     </div>
                 </td></tr>

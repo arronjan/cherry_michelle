@@ -1,9 +1,9 @@
 {% extends 'orders/base.html' %}
 {% block title %}Cake Menu – Cakery{% endblock %}
-{% block topbar_title %}🎂 Cake Menu{% endblock %}
+{% block topbar_title %}Cake Menu{% endblock %}
 {% block content %}
 <div class="page-header">
-    <div class="page-header-title"><span>🎂</span> Cake Menu</div>
+    <div class="page-header-title"><span></span> Cake Menu</div>
     <a href="{% url 'cake_add' %}" class="btn btn-primary">➕ Add Cake</a>
 </div>
 <div class="card">
@@ -27,7 +27,7 @@
                 {% empty %}
                 <tr><td colspan="7">
                     <div class="empty-state">
-                        <div class="empty-icon">🎂</div>
+                        <div class="empty-icon"></div>
                         <p>No cakes in menu yet.</p>
                         <a href="{% url 'cake_add' %}" class="btn btn-primary">Add First Cake</a>
                     </div>
