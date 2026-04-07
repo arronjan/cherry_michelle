@@ -85,6 +85,9 @@ def customer_edit(request, pk):
 def customer_delete(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
+        if customer.orders.exists():
+            messages.error(request, f'Cannot delete {customer.name}. They still have {customer.orders.count()} order(s) in the system.')
+            return redirect('customer_list')
         customer.delete()
         messages.success(request, 'Customer deleted.')
         return redirect('customer_list')
