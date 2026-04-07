@@ -566,6 +566,11 @@ def payment_simulation(request, pk):
     customer = request.user.customer_account.customer
     order = get_object_or_404(Order, pk=pk, customerID=customer)
     payment = order.payments.first()
+
+    if payment and payment.paymentstatus == 'paid':
+        messages.error(request, 'This order has already been paid.')
+        return redirect('customer_order_detail', pk=pk)
+
     return render(request, 'orders/payment_simulation.html', {
         'order': order,
         'payment': payment,
