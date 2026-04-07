@@ -113,6 +113,12 @@ class CustomerRegistrationForm(UserCreationForm):
         self.fields['password1'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Password'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Confirm Password'})
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if Customer.objects.filter(email=email).exists():
+            raise forms.ValidationError('This email is already registered. Please use a different email.')
+        return email
+
 
 class CustomerOrderForm(forms.Form):
     cake = forms.ModelChoiceField(
